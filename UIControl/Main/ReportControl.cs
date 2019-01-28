@@ -53,6 +53,7 @@ namespace UIControl . Main
             int y = 20;
             labelControl1 . Location = new Point ( x - labelControl1 . Width / 2 ,y + labelControl1 . Height / 2 );
             button2 . Location = new Point ( x - button2 . Width / 2 ,y + labelControl1 . Height + 50 );
+            button1 . Location = new Point ( x - button1 . Width / 2 ,y + labelControl1 . Height + button2 . Height + 90 );
         }
 
     }

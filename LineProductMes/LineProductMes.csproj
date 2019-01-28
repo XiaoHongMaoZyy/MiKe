@@ -552,6 +552,12 @@
     <Compile Include="FormPurProductView.Designer.cs">
       <DependentUpon>FormPurProductView.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSalaryByEveryOne.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSalaryByEveryOne.Designer.cs">
+      <DependentUpon>FormSalaryByEveryOne.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSemiPlanView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -788,6 +794,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPurProductView.resx">
       <DependentUpon>FormPurProductView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSalaryByEveryOne.resx">
+      <DependentUpon>FormSalaryByEveryOne.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSemiPlanView.resx">
       <DependentUpon>FormSemiPlanView.cs</DependentUpon>

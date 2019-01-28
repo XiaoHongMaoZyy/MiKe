@@ -31,7 +31,7 @@ namespace LineProductMes
         UIControl . Main . WorkControl workCon;
         UIControl . Main . BoardControl boardCon;
         UIControl . Main . ReportControl reportCon;
-
+        
         public FormMain ( )
         {
             InitializeComponent ( );
@@ -302,6 +302,7 @@ namespace LineProductMes
             reportCon . Dock = DockStyle . Fill;
             reportCon . roundButton1 . Click += RoundButton1_Click5;
             reportCon . button2 . Click += btnWages_Click;
+            reportCon . button1 . Click += btnEvery_Click;
             findAllBtn ( reportCon );
         }
         private void RoundButton1_Click5 ( object sender ,EventArgs e )
@@ -644,6 +645,12 @@ namespace LineProductMes
         private void btnWages_Click ( object sender ,EventArgs e )
         {
             idPro = proId = "FormWages";
+            openTheForm ( proId ,idPro );
+        }
+        //个人工资报表
+        private void btnEvery_Click ( object sender ,EventArgs e )
+        {
+            idPro = proId = "FormSalaryByEveryOne";
             openTheForm ( proId ,idPro );
         }
         #endregion

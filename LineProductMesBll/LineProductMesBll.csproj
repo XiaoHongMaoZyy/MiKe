@@ -77,6 +77,7 @@
     <Compile Include="Bll\ProductPlanBll.cs" />
     <Compile Include="Bll\ProductPlanPreviewBll.cs" />
     <Compile Include="Bll\PurchaseBoardBll.cs" />
+    <Compile Include="Bll\SalaryByEveryOneBll.cs" />
     <Compile Include="Bll\SemiProductPlanBll.cs" />
     <Compile Include="Bll\SupplierForMouldBll.cs" />
     <Compile Include="Bll\WagesBll.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Dao\ProductPlanDao.cs" />
     <Compile Include="Dao\ProductPlanPreviewDao.cs" />
     <Compile Include="Dao\PurchaseBoardDao.cs" />
+    <Compile Include="Dao\SalaryByEveryOneDao.cs" />
     <Compile Include="Dao\SemiProductPlanDao.cs" />
     <Compile Include="Dao\SupplierForMouldDao.cs" />
     <Compile Include="Dao\WagesDao.cs" />

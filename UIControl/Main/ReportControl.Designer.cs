@@ -31,6 +31,7 @@
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.button2 = new System.Windows.Forms.Button();
             this.roundButton1 = new UIControl.Main.RoundButton();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelControl1
@@ -55,7 +56,7 @@
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button2.Location = new System.Drawing.Point(242, 111);
+            this.button2.Location = new System.Drawing.Point(240, 111);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(120, 89);
             this.button2.TabIndex = 7;
@@ -79,10 +80,29 @@
             this.roundButton1.TabIndex = 16;
             this.roundButton1.UseVisualStyleBackColor = false;
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Transparent;
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button1.Location = new System.Drawing.Point(240, 230);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(120, 89);
+            this.button1.TabIndex = 17;
+            this.button1.Tag = "FormWages";
+            this.button1.Text = "个人工资明细表";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
             // ReportControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.roundButton1);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.button2);
@@ -98,5 +118,6 @@
         private DevExpress . XtraEditors . LabelControl labelControl1;
         public System . Windows . Forms . Button button2;
         public RoundButton roundButton1;
+        public System . Windows . Forms . Button button1;
     }
 }

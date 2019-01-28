@@ -417,3 +417,4 @@ D:\ProjectData\MiKe\LineProductMes\LineProductMes\obj\Debug\LineProductMes.Class
 D:\ProjectData\MiKe\LineProductMes\LineProductMes\obj\Debug\LineProductMes.ChildForm.FormLEDNOrder.resources
 D:\ProjectData\MiKe\LineProductMes\LineProductMes\obj\Debug\LineProductMes.ChildForm.FormPaintOrder.resources
 D:\ProjectData\MiKe\LineProductMes\LineProductMes\obj\Debug\LineProductMes.ChildForm.FormUserChoise.resources
+D:\ProjectData\MiKe\LineProductMes\LineProductMes\obj\Debug\LineProductMes.FormSalaryByEveryOne.resources
