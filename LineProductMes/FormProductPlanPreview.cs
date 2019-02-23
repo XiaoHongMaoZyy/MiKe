@@ -563,7 +563,7 @@ namespace LineProductMes
                 }
                 if ( result == false )
                     break;
-                totalValue = Convert . ToInt32 ( row [ "预计生产量" ] );
+                totalValue = string . IsNullOrEmpty ( row [ "预计生产量" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "预计生产量" ] );
                 if ( totalValue < total )
                 {
                     XtraMessageBox . Show ( "主件品号:" + row [ "主件品号" ] + "\n\r预计生产量:" + totalValue + "小于您的排量:" + total + "\n\r请核实" ,"提示" );

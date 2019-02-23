@@ -94,7 +94,7 @@ namespace LineProductMesBll
                 //strSql . AppendFormat ( "SELECT QAB003,DEA002,DEA003,DEA057,DDA001 FROM SGMQAB INNER JOIN TPADEA ON QAB003=DEA001 INNER JOIN TPADDA ON DEA008=DDA001 WHERE QAB001='{0}'),CFT AS ( " ,bodyTwo . RCB024 );
                 //strSql . AppendFormat ( "SELECT B.RAB003,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END RAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' GROUP BY RAA001,RAB003) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 WHERE A.RAA001='{0}') SELECT  QAB003,DEA002,DEA003,DEA057,DDA001,RAB QAB FROM CET A INNER JOIN CFT B ON A.QAB003=B.RAB003" ,bodyTwo . RCB022 );
                 //003
-                strSql . AppendFormat ( "SELECT B.RAB003 QAB003,DEA002,DEA003,DEA057,DDA001,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END QAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' AND RAA015='{1}' GROUP BY RAA001,RAB003) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 INNER JOIN TPADEA D ON B.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 WHERE A.RAA001='{0}'  AND RAA015='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
+                strSql . AppendFormat ( "SELECT A.RAA001,B.RAB002,B.RAB003 QAB003,DEA002,DEA003,DEA057,DDA001,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END QAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB002,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' AND RAA015='{1}' GROUP BY RAA001,RAB003,RAB002) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 INNER JOIN TPADEA D ON B.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 WHERE A.RAA001='{0}'  AND RAA015='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
 
                 tableOne = SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
 
@@ -111,6 +111,8 @@ namespace LineProductMesBll
                         bodyTwo . RCB007 = r [ "DDA001" ] . ToString ( );
                         bodyTwo . RCB008 = bodyOne . RCC006 * ( string . IsNullOrEmpty ( r [ "QAB" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( r [ "QAB" ] ) );
                         bodyTwo . RCB020 = r [ "DEA057" ] . ToString ( );
+                        bodyTwo . RCB026 = r [ "RAA001" ] . ToString ( );
+                        bodyTwo . RCB027 = r [ "RAB002" ] . ToString ( );
                         if ( bodyTwo . RCB008 > 0 )
                             addBodyTwo ( SQLString ,bodyTwo );
                     }
@@ -187,9 +189,9 @@ namespace LineProductMesBll
         {
             StringBuilder strSql = new StringBuilder ( );
             strSql . Append ( "INSERT INTO SGMRCB (" );
-            strSql . Append ( "RCB001,RCB002,RCB003,RCB004,RCB005,RCB006,RCB007,RCB008,RCB019,RCB020,RCB021,RCB022,RCB023,RCB024,RCB029) " );
+            strSql . Append ( "RCB001,RCB002,RCB003,RCB004,RCB005,RCB006,RCB007,RCB008,RCB019,RCB020,RCB021,RCB022,RCB023,RCB024,RCB026,RCB027,RCB029) " );
             strSql . Append ( "VALUES (" );
-            strSql . Append ( "@RCB001,@RCB002,@RCB003,@RCB004,@RCB005,@RCB006,@RCB007,@RCB008,@RCB019,@RCB020,@RCB021,@RCB022,@RCB023,@RCB024,@RCB029) " );
+            strSql . Append ( "@RCB001,@RCB002,@RCB003,@RCB004,@RCB005,@RCB006,@RCB007,@RCB008,@RCB019,@RCB020,@RCB021,@RCB022,@RCB023,@RCB024,@RCB026,@RCB027,@RCB029) " );
             SqlParameter [ ] parameter = {
                 new SqlParameter("@RCB001",SqlDbType.VarChar),
                 new SqlParameter("@RCB002",SqlDbType.VarChar),
@@ -205,6 +207,8 @@ namespace LineProductMesBll
                 new SqlParameter("@RCB022",SqlDbType.VarChar),
                 new SqlParameter("@RCB023",SqlDbType.VarChar),
                 new SqlParameter("@RCB024",SqlDbType.VarChar),
+                new SqlParameter("@RCB026",SqlDbType.VarChar),
+                new SqlParameter("@RCB027",SqlDbType.VarChar),
                 new SqlParameter("@RCB029",SqlDbType.VarChar)
             };
             parameter [ 0 ] . Value = model . RCB001;
@@ -221,7 +225,9 @@ namespace LineProductMesBll
             parameter [ 11 ] . Value = model . RCB022;
             parameter [ 12 ] . Value = model . RCB023;
             parameter [ 13 ] . Value = model . RCB024;
-            parameter [ 14 ] . Value = model . RCB029;
+            parameter [ 14 ] . Value = model . RCB026;
+            parameter [ 15 ] . Value = model . RCB027;
+            parameter [ 16 ] . Value = model . RCB029;
 
             SQLString . Add ( strSql ,parameter );
         }

@@ -185,6 +185,9 @@ namespace LineProductMes
             else
                 _header . PAN009 = false;
 
+            if ( _header . PAN009 && checkDataConsistency ( ) == false )
+                return 0;
+
             _header . PAN001 = txtPAN001 . Text;
             _header . PAN004 = txtPAN005 . EditValue . ToString ( );
 
@@ -836,7 +839,7 @@ namespace LineProductMes
                 }
             }
         }
-        private void txtPAN013_SelectedValueChanged ( object sender ,EventArgs e )
+        private void txtPAN013_SelectedValueChanged ( object sender ,EventArgs e ) 
         {
             updateBatchTime ( );
         }
@@ -901,8 +904,16 @@ namespace LineProductMes
             {
                  if ( txtPAN013 . Text . Equals ( "计件" ) )
                 {
-                    row [ "PPA005" ] = dtStart;
-                    row [ "PPA006" ] = dtEnd;
+                    if ( row [ "PPA010" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "PPA005" ] = dtStart;
+                        row [ "PPA006" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "PPA005" ] = DBNull . Value;
+                        row [ "PPA006" ] = DBNull . Value;
+                    }
                     row [ "PPA007" ] = DBNull . Value;
                     row [ "PPA008" ] = DBNull . Value;
                     row [ "PPA013" ] = DBNull . Value;
@@ -912,8 +923,16 @@ namespace LineProductMes
                     row [ "PPA005" ] = DBNull . Value;
                     row [ "PPA006" ] = DBNull . Value;
                     row [ "PPA012" ] = DBNull . Value;
-                    row [ "PPA007" ] = dtStart;
-                    row [ "PPA008" ] = dtEnd;
+                    if ( row [ "PPA010" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "PPA007" ] = dtStart;
+                        row [ "PPA008" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "PPA007" ] = DBNull . Value;
+                        row [ "PPA008" ] = DBNull . Value;
+                    }
                     //row [ "PPA013" ] = DBNull . Value;
                 }
                 calcuTimeSum ( );
@@ -1210,6 +1229,13 @@ namespace LineProductMes
 
             _header . PAN015 = Convert . ToDateTime ( txtPAN015 . Text );
             _header . PAN016 = Convert . ToDateTime ( txtPAN016 . Text );
+
+            if ( ( Convert . ToDateTime ( _header . PAN016 ) - Convert . ToDateTime ( _header . PAN015 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
+
             _header . PAN001 = txtPAN001 . Text;
             _header . PAN002 = txtPAN003 . EditValue . ToString ( );
             _header . PAN003 = txtPAN003 . Text;
@@ -1222,6 +1248,12 @@ namespace LineProductMes
             _header . PAN011 = string . IsNullOrEmpty ( txtPAN011 . Text ) == true ? 0 : Convert . ToDecimal ( txtPAN011 . Text );
             _header . PAN012 = string . IsNullOrEmpty ( txtPAN012 . Text ) == true ? 0 : Convert . ToDecimal ( txtPAN012 . Text );
             _header . PAN013 = txtPAN013 . Text;
+
+            if ( _header . PAN017 > 0 && _header . PAN018 > 0 && string . IsNullOrEmpty ( _header . PAN007 ) )
+            {
+                XtraMessageBox . Show ( "请注明补贴工时原因" );
+                return false;
+            }
 
             return result;
         }
@@ -1760,6 +1792,40 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            strWhere = "1=1";
+            strWhere += " AND PAP001='" + _header . PAN001 + "'";
+
+            DataTable ViewOne = _bll . tableViewTwo ( strWhere );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+            {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                _bodyTwo . PPA002 = row [ "PPA002" ] . ToString ( );
+                _bodyTwo . PPA014 = string . IsNullOrEmpty ( row [ "PPA014" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "PPA014" ] );
+                if ( ViewOne . Select ( "PPA002='" + _bodyTwo . PPA002 + "' AND PPA014='" + _bodyTwo . PPA014 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _bodyTwo . PPA002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         #endregion
 

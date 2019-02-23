@@ -212,6 +212,10 @@ namespace LineProductMes
                 _model . LGN003 = true;
             else
                 _model . LGN003 = false;
+
+            if ( _model . LGN003 && checkDataConsistency ( ) == false )
+                return 0;
+
             result = _bll . Exanmie ( txtLGN001 . Text ,_model . LGN003 );
             if ( result )
             {
@@ -685,13 +689,29 @@ namespace LineProductMes
                     row [ "LGP007" ] = DBNull . Value;
                     row [ "LGP008" ] = DBNull . Value;
                     row [ "LGP012" ] = DBNull . Value;
-                    row [ "LGP009" ] = dtStart;
-                    row [ "LGP010" ] = dtEnd;
+                    if ( row [ "LGP005" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LGP009" ] = dtStart;
+                        row [ "LGP010" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LGP009" ] = DBNull . Value;
+                        row [ "LGP010" ] = DBNull . Value;
+                    }
                 }
                 else if ( "计时" . Equals ( txtLGN007 . Text ) )
                 {
-                    row [ "LGP007" ] = dtStart;
-                    row [ "LGP008" ] = dtEnd;
+                    if ( row [ "LGP005" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LGP007" ] = dtStart;
+                        row [ "LGP008" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LGP007" ] = DBNull . Value;
+                        row [ "LGP008" ] = DBNull . Value;
+                    }
                     row [ "LGP009" ] = DBNull . Value;
                     row [ "LGP010" ] = DBNull . Value;
                     row [ "LGP011" ] = DBNull . Value;
@@ -897,6 +917,12 @@ namespace LineProductMes
 
             _model . LGN009 = Convert . ToDateTime ( txtLGN009 . Text );
             _model . LGN010 = Convert . ToDateTime ( txtLGN010 . Text );
+
+            if ( ( Convert . ToDateTime ( _model . LGN010 ) - Convert . ToDateTime ( _model . LGN009 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
 
             _model . LGN001 = txtLGN001 . Text;
             _model . LGN002 = Convert . ToDateTime ( txtLGN002 . Text );
@@ -1311,6 +1337,42 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            _model . LGN001 = txtLGN001 . Text;
+
+            DataTable ViewOne = _bll . getTableViewTwo ( _model . LGN001 );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+            {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+
+                _bodyTwo . LGP002 = row [ "LGP002" ] . ToString ( );
+                _bodyTwo . LGP013 = string . IsNullOrEmpty ( row [ "LGP013" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "LGP013" ] );
+
+                if ( ViewOne . Select ( "LGP002='" + _bodyTwo . LGP002 + "' AND LGP013='" + _bodyTwo . LGP013 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _bodyTwo . LGP002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+
+            }
+            return result;
         }
         #endregion
 

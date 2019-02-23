@@ -30,6 +30,7 @@ namespace LineProductMes
             FieldInfo fi = typeof ( XPaint ) . GetField ( "graphics" ,BindingFlags . Static | BindingFlags . NonPublic );
             fi . SetValue ( null ,new DrawXPaint ( ) );
             GridViewMoHuSelect . SetFilter ( new DevExpress . XtraGrid . Views . Grid . GridView [ ] { gridView1 } );
+            GrivColumnStyle . setColumnAppHeaderBack ( new DevExpress . XtraGrid . Views . Grid . GridView [ ] { gridView1 } );
             controlClear ( );
             controlUnEnable ( );
 
@@ -154,9 +155,14 @@ namespace LineProductMes
         protected override int Examine ( )
         {
             if ( toolExamin . Caption . Equals ( "审核" ) )
+            {
                 model . WAG003 = true;
+                if ( checkReten ( ) == false )
+                    return 0;
+            }
             else
                 model . WAG003 = false;
+
             string state = toolExamin . Caption;
             result = _bll . Examine ( txtCode . Text ,model . WAG003 );
             if ( result )
@@ -367,10 +373,39 @@ namespace LineProductMes
             {
                 bz = row [ "WAH023" ] . ToString ( );
                 gr = string . IsNullOrEmpty ( row [ "WAH024" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "WAH024" ] );
-                bzSa = Convert . ToDecimal ( tableView . Compute ( "sum(WAH015)" ,"WAH023='" + bz + "'" ) );
-                if ( gr < bzSa )
+                if ( tableView . Compute ( "sum(WAH015)" ,"WAH023='" + bz + "'" ) == DBNull . Value )
+                    bzSa = 0;
+                else
+                    bzSa = Convert . ToDecimal ( tableView . Compute ( "sum(WAH015)" ,"WAH023='" + bz + "'" ) );
+
+                if ( ( gr + 1 ) < bzSa )
                 {
                     XtraMessageBox . Show ( bz + "提留工资分配总计大于提留工资,请核实" );
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
+        }
+        bool checkReten ( )
+        {
+            result = true;
+            if ( tableView == null || tableView . Rows . Count < 1 )
+                return false;
+            string bz = string . Empty;
+            decimal gr = 0M, bzSa = 0M;
+            foreach ( DataRow row in tableView . Rows )
+            {
+                bz = row [ "WAH023" ] . ToString ( );
+                gr = string . IsNullOrEmpty ( row [ "WAH024" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "WAH024" ] );
+                if ( tableView . Compute ( "sum(WAH015)" ,"WAH023='" + bz + "'" ) == DBNull . Value )
+                    bzSa = 0;
+                else
+                    bzSa = Convert . ToDecimal ( tableView . Compute ( "sum(WAH015)" ,"WAH023='" + bz + "'" ) );
+                if ( gr - bzSa > 1 )
+                {
+                    XtraMessageBox . Show ( bz + "提留工资分配总计小于提留工资,请分配提留再审核" );
                     result = false;
                     break;
                 }

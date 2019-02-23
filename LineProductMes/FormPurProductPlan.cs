@@ -64,5 +64,6 @@ namespace LineProductMes
             treeList1 . OptionsView . ShowAutoFilterRow = true;
             treeList1 . OptionsFilter . FilterMode = DevExpress . XtraTreeList . FilterMode . Smart;
         }
+
     }
 }

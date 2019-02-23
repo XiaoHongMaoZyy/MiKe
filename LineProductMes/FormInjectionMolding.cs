@@ -191,6 +191,9 @@ namespace LineProductMes
             else
                 _header . IJA010 = false;
 
+            if ( _header . IJA010 && checkDataConsistency ( ) == false )
+                return 0;
+
             if ( _header . IJA010 == false )
             {
                 if ( GenerateSGMRCACB . Exists ( _header . IJA001 ) )
@@ -931,8 +934,16 @@ namespace LineProductMes
                     return;
                 foreach ( DataRow row in tableViewOne . Rows )
                 {
-                    row [ "IJB016" ] = dtStart;
-                    row [ "IJB017" ] = dtEnd;
+                    if ( row [ "IJB003" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "IJB016" ] = dtStart;
+                        row [ "IJB017" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "IJB016" ] = DBNull . Value;
+                        row [ "IJB017" ] = DBNull . Value;
+                    }
                 }
             }
             else if ( "计时" . Equals ( txtIJA002 . Text ) )
@@ -944,8 +955,16 @@ namespace LineProductMes
                     return;
                 foreach ( DataRow row in tableViewTre . Rows )
                 {
-                    row [ "IJD006" ] = dtStart;
-                    row [ "IJD007" ] = dtEnd;
+                    if ( row [ "IJD010" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "IJD006" ] = dtStart;
+                        row [ "IJD007" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "IJD006" ] = DBNull . Value;
+                        row [ "IJD007" ] = DBNull . Value;
+                    }
                 }
             }
             calcuSumTime ( );
@@ -1960,6 +1979,68 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 20:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            DataTable ViewOne = new DataTable ( );
+            if ( "计件" . Equals ( txtIJA002 . Text ) )
+            {
+                ViewOne = _bll . getTableOne ( _header . IJA001 );
+                if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+                {
+                    XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                    return false;
+                }
+                DataRow row;
+
+                for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+                {
+                    row = bandedGridView1 . GetDataRow ( i );
+                    if ( row == null )
+                        continue;
+                    _bodyOne . IJB002 = row [ "IJB002" ] . ToString ( );
+                    _bodyOne . IJB025 = string . IsNullOrEmpty ( row [ "IJB025" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "IJB025" ] );
+                    if ( ViewOne . Select ( "IJB002='" + _bodyOne . IJB002 + "' AND IJB025='" + _bodyOne . IJB025 + "'" ) . Length < 1 )
+                    {
+                        XtraMessageBox . Show ( "工号:" + _bodyOne . IJB002 + "的工资与后台不一致,请重新编辑保存" );
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else if ( "计时" . Equals ( txtIJA002 . Text ) )
+            {
+                ViewOne = _bll . getTableTre ( _header . IJA001 );
+                if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+                {
+                    XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                    return false;
+                }
+                DataRow row;
+
+                for ( int i = 0 ; i < gridView4 . RowCount ; i++ )
+                {
+                    row = gridView4 . GetDataRow ( i );
+                    if ( row == null )
+                        continue;
+                    _bodyTre . IJD002 = row [ "IJD002" ] . ToString ( );
+                    _bodyTre . IJD013 = string . IsNullOrEmpty ( row [ "IJD013" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "IJD013" ] );
+                    if ( ViewOne . Select ( "IJD002='" + _bodyTre . IJD002 + "' AND IJD013='" + _bodyTre . IJD013 + "'" ) . Length < 1 )
+                    {
+                        XtraMessageBox . Show ( "工号:" + _bodyTre . IJD002 + "的工资与后台不一致,请重新编辑保存" );
+                        result = false;
+                        break;
+                    }
+                }
+            }
+
+            return result;
         }
         #endregion
 

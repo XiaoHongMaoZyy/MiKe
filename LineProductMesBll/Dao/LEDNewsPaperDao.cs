@@ -133,7 +133,7 @@ namespace LineProductMesBll . Dao
         /// <param name="oddNum"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public bool Exanmie ( string oddNum ,bool result )
+        public bool Exanmie ( LineProductMesEntityu . LEDNewsPaperHeaderEntity model )
         {
             Dictionary<object ,object> SQLString = new Dictionary<object ,object> ( );
             StringBuilder strSql = new StringBuilder ( );
@@ -142,9 +142,17 @@ namespace LineProductMesBll . Dao
                 new SqlParameter("@LEC001",SqlDbType.NVarChar,20),
                 new SqlParameter("@LEC017",SqlDbType.Bit)
             };
-            parameter [ 0 ] . Value = oddNum;
-            parameter [ 1 ] . Value = result;
+            parameter [ 0 ] . Value = model . LEC001;
+            parameter [ 1 ] . Value = model . LEC017;
             SQLString . Add ( strSql ,parameter );
+
+            if ( model . LEC017 )
+            {
+                strSql = new StringBuilder ( );
+                strSql . AppendFormat ( "SELECT LEE002 ANN002,LEE003 ANN003,LEE004 ANN005,LEE009 ANN009,DDA001 FROM MIKLEE A LEFT JOIN TPADEA B ON A.LEE003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE LEE001 ='{0}'" ,model . LEC001 );
+
+                GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,model . LEC001 ,model . LEC012 );
+            }
 
             return SqlHelper . ExecuteSqlTranDic ( SQLString );
         }

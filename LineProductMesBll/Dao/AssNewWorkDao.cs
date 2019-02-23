@@ -946,5 +946,18 @@ namespace LineProductMesBll . Dao
             return SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
         }
 
+        /// <summary>
+        /// 获取入职时间少于等于7天的入职人员
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public DataTable getUseForEntry ( DateTime dt )
+        {
+            StringBuilder strSql = new StringBuilder ( );
+            strSql . AppendFormat ( "SELECT EMP001 FROM MIKEMP WHERE DATEDIFF(DAY,EMP023,'{0}')<=7" ,dt );
+
+            return SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
+        }
+
     }
 }

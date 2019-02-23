@@ -5,6 +5,7 @@ using StudentMgr;
 using System . Data;
 using System . Data . SqlClient;
 using System . Linq;
+using System . Windows . Forms;
 
 namespace LineProductMesBll . Dao
 {
@@ -336,21 +337,21 @@ namespace LineProductMesBll . Dao
             }
 
 
-            if ( SqlHelper . ExecuteSqlTranDic ( SQLString ) )
-            {
-                SQLString . Clear ( );
-                //获取入职补贴
-                table = getTableSix ( dt );
-                if ( table != null && table . Rows . Count > 0 )
-                {
-                    foreach ( DataRow row in table . Rows )
-                    {
-                        model . WAH002 = row [ "ANX002" ] . ToString ( );
-                        model . WAH014 = string . IsNullOrEmpty ( row [ "ANX" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANX" ] . ToString ( ) );
-                        EditSix ( SQLString ,model );
-                    }
-                }
-            }
+            //if ( SqlHelper . ExecuteSqlTranDic ( SQLString ) )
+            //{
+            //    SQLString . Clear ( );
+            //    //获取入职补贴
+            //    table = getTableSix ( dt );
+            //    if ( table != null && table . Rows . Count > 0 )
+            //    {
+            //        foreach ( DataRow row in table . Rows )
+            //        {
+            //            model . WAH002 = row [ "ANX002" ] . ToString ( );
+            //            model . WAH014 = string . IsNullOrEmpty ( row [ "ANX" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANX" ] . ToString ( ) );
+            //            EditSix ( SQLString ,model );
+            //        }
+            //    }
+            //}
 
             if ( SqlHelper . ExecuteSqlTranDic ( SQLString ) )
             {
@@ -726,7 +727,7 @@ namespace LineProductMesBll . Dao
         void EditEgi ( Dictionary<object ,object> SQLString ,LineProductMesEntityu . WagesBodyEntity model )
         {
             StringBuilder strSql = new StringBuilder ( );
-            strSql . AppendFormat ( "UPDATE MIKWAH SET WAH013={0},WAH019={1},WAH004='{4}' WHERE WAH001='{2}' AND WAH002='{3}' " ,model . WAH013 ,model . WAH019 ,model . WAH001 ,model . WAH002 ,model . WAH004 );
+            strSql . AppendFormat ( "UPDATE MIKWAH SET WAH019={0},WAH004='{1}' WHERE WAH001='{2}' AND WAH002='{3}' " ,model . WAH019 ,model . WAH004 ,model . WAH001 ,model . WAH002 );
 
             SQLString . Add ( strSql ,null );
         }

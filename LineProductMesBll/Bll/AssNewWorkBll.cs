@@ -241,5 +241,14 @@ namespace LineProductMesBll . Bll
             return dal . getTableOtherSur ( orderNum ,proNum ,oddNum );
         }
 
+        /// <summary>
+        /// 获取入职时间少于等于7天的入职人员
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public DataTable getUseForEntry ( DateTime dt )
+        {
+            return dal . getUseForEntry ( dt );
+        }
     }
 }

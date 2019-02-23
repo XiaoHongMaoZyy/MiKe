@@ -4,6 +4,10 @@ namespace LineProductMes . ClassForMain
 {
     public static class GrivColumnStyle
     {
+        /// <summary>
+        /// 设置gridview的样式
+        /// </summary>
+        /// <param name="grids"></param>
         public static void setColumnStyle ( GridView [ ] grids )
         {
             foreach ( GridView gv in grids )
@@ -25,6 +29,10 @@ namespace LineProductMes . ClassForMain
             }
         }
         
+        /// <summary>
+        /// 设置tree的样式
+        /// </summary>
+        /// <param name="tree"></param>
         public static void setColumnStyle ( DevExpress . XtraTreeList . TreeList tree )
         {
             foreach ( DevExpress .XtraTreeList.Columns.TreeListColumn co in tree . Columns )
@@ -43,6 +51,10 @@ namespace LineProductMes . ClassForMain
             }
         }
 
+        /// <summary>
+        /// 设置行字体色
+        /// </summary>
+        /// <param name="grids"></param>
         public static void setColumnFontStyle ( GridView [ ] grids )
         {
             foreach ( GridView gv in grids )
@@ -51,6 +63,24 @@ namespace LineProductMes . ClassForMain
                 {
                     co . AppearanceCell . ForeColor = System . Drawing . Color . White;
                     co . AppearanceCell . Options . UseForeColor = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置行背景色
+        /// </summary>
+        /// <param name="grids"></param>
+        public static void setColumnAppHeaderBack ( GridView [ ] grids )
+        {
+            foreach ( GridView gv in grids )
+            {
+                foreach ( DevExpress . XtraGrid . Columns . GridColumn co in gv . Columns )
+                {
+                    if ( co . OptionsColumn . AllowEdit )
+                    {
+                        co . AppearanceCell . BackColor = System . Drawing . Color . Pink;
+                    }
                 }
             }
         }

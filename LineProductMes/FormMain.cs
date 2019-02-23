@@ -658,5 +658,6 @@ namespace LineProductMes
         /* xtraTabbedMdiManager1 窗体
          * http://makaidong.com/ws1996/15953_552258.html
          */
+
     }
 }

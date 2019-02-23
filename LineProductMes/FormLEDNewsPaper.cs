@@ -11,6 +11,7 @@ using System . Linq;
 using System . Windows . Forms;
 using System . ComponentModel;
 using LineProductMes . ChildForm;
+using LineProductMesBll;
 
 namespace LineProductMes
 {
@@ -176,12 +177,29 @@ namespace LineProductMes
                 XtraMessageBox . Show ( "单号不可为空" );
                 return 0;
             }
+
+            _header . LEC001 = txtLEC001 . Text;
+            _header . LEC012 = txtLEC012 . EditValue . ToString ( );
+
             state = toolExamin . Caption;
             if ( state . Equals ( "审核" ) )
                 _header . LEC017 = true;
             else
                 _header . LEC017 = false;
-            result = _bll . Exanmie ( txtLEC001 . Text ,_header . LEC017 );
+
+            if ( _header . LEC017 && checkDataConsistency ( ) == false )
+                return 0;
+
+            if ( _header . LEC017 == false )
+            {
+                if ( GenerateSGMRCACB . Exists ( _header . LEC001 ) )
+                {
+                    XtraMessageBox . Show ( "已入库,不允许反审核" );
+                    return 0;
+                }
+            }
+
+            result = _bll . Exanmie ( _header  );
             if ( result )
             {
                 XtraMessageBox . Show ( state + "成功" );
@@ -687,8 +705,16 @@ namespace LineProductMes
             {
                 if ( txtLEC021 . Text . Equals ( "计件" ) )
                 {
-                    row [ "LED005" ] = dtStart;
-                    row [ "LED006" ] = dtEnd;
+                    if ( row [ "LED012" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LED005" ] = dtStart;
+                        row [ "LED006" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LED005" ] = DBNull . Value;
+                        row [ "LED006" ] = DBNull . Value;
+                    }
                     //row [ "LEG014" ] = null;
                     row [ "LED008" ] = DBNull . Value;
                     row [ "LED009" ] = DBNull . Value;
@@ -699,8 +725,16 @@ namespace LineProductMes
                     row [ "LED005" ] = DBNull . Value;
                     row [ "LED006" ] = DBNull . Value;
                     row [ "LED014" ] = DBNull . Value;
-                    row [ "LED008" ] = dtStart;
-                    row [ "LED009" ] = dtEnd;
+                    if ( row [ "LED012" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LED008" ] = dtStart;
+                        row [ "LED009" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LED008" ] = DBNull . Value;
+                        row [ "LED009" ] = DBNull . Value;
+                    }
                     //row [ "LEG015" ] = null;
                 }
             }
@@ -1032,6 +1066,13 @@ namespace LineProductMes
             _header . LEC023 = Convert . ToDateTime ( txtLEC023 . Text );
             _header . LEC024 = Convert . ToDateTime ( txtLEC024 . Text );
 
+            if ( ( Convert . ToDateTime ( _header . LEC024 ) - Convert . ToDateTime ( _header . LEC023 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
+
+
             _header . LEC001 = txtLEC001 . Text;
             _header . LEC002 = _header . LEC003 = _header . LEC004 = _header . LEC005 = _header . LEC006 = string . Empty;
             _header . LEC007 = 0;
@@ -1360,6 +1401,40 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            strWhere = "1=1";
+            strWhere += " AND LED001='" + _header . LEC001 + "'";
+
+            DataTable ViewOne = _bll . getTableView ( strWhere );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < GridView1 . RowCount ; i++ )
+            {
+                row = GridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                _body . LED002 = row [ "LED002" ] . ToString ( );
+                _body . LED016 = string . IsNullOrEmpty ( row [ "LED016" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "LED016" ] );
+                if ( ViewOne . Select ( "LED002='" + _body . LED002 + "' AND LED016='" + _body . LED016 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _body . LED002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         #endregion
 

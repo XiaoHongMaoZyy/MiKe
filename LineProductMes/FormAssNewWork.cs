@@ -20,12 +20,13 @@ namespace LineProductMes
         LineProductMesEntityu.AssNewWorkBodyEntity _body=null;
         LineProductMesEntityu.AssNewWorkHeaderEntity _header=null;
         LineProductMesEntityu.AssNewWorkBodyAnnEntity _bodyOne=null;
-        DataTable tableWork,tableView,tableViewTwo,tableOtherSur,tableUser,tablePInfo,talePrintOne,talePrintTwo,tablePrintTre,tablePrintFor,tablePrintFiv;
+        DataTable tableWork,tableView,tableViewTwo,tableOtherSur,tableUser,tablePInfo,talePrintOne,talePrintTwo,tablePrintTre,tablePrintFor,tablePrintFiv,getUseForEntry;
         DataRow row;
         List<string> idxDelete=new List<string>(); List<string> idxDeleteOne=new List<string>();
         int selectIndex;
         string parame=string.Empty,strWhere=string.Empty,state=string.Empty,focusName=string.Empty;
         bool result=false;
+        decimal entrySala=0M;
         DateTime dt,dtStart,dtEnd;
         
         public FormAssNewWork ( )
@@ -79,9 +80,9 @@ namespace LineProductMes
                 gridControl2 . DataSource = tableViewTwo;
 
                 calcuPriceSum ( );
-                //calcuSalaryForSub ( );
-                calcuSalarySum ( );
                 calcuSalaryForSub ( );
+                calcuSalarySum ( );
+                //calcuSalaryForSub ( );
                 calcuSalaryForTime ( );
                 //calcuTSumByP ( );
                 calcuTsumTime ( );
@@ -120,8 +121,10 @@ namespace LineProductMes
             txtANW015 . Text = dtStart . ToString ( );
             txtANW016 . Text = dtEnd . ToString ( );
             txtANW025 . Text = LineProductMesBll . UserInfoMation . userName;
-           
-           return base . Add ( );
+
+            
+
+            return base . Add ( );
         }
         protected override int Edit ( )
         {
@@ -193,6 +196,9 @@ namespace LineProductMes
                 _header . ANW020 = true;
             else
                 _header . ANW020 = false;
+
+            if ( _header . ANW020 && checkDataConsistency ( ) == false )
+                return 0;
 
             _header . ANW001 = txtANW001 . Text;
             _header . ANW012 = txtANW013 . EditValue . ToString ( );
@@ -384,6 +390,7 @@ namespace LineProductMes
                 }
             }
             calcuTsumTime ( );
+            calcuSalaryForSub ( );
         }
         private void Edit6_EditValueChanged ( object sender ,EventArgs e )
         {
@@ -436,6 +443,7 @@ namespace LineProductMes
                 return;
 
             updateBatchTime ( );
+       
         }
         private void bandedGridView1_CellValueChanged ( object sender ,DevExpress . XtraGrid . Views . Base . CellValueChangedEventArgs e )
         {
@@ -584,6 +592,7 @@ namespace LineProductMes
                     row [ "ANX011" ] = "在职";
                 }
                 calcuTsumTime ( );
+                calcuSalaryForSub ( );
             }
         }
         private void gridView1_CellValueChanged ( object sender ,DevExpress . XtraGrid . Views . Base . CellValueChangedEventArgs e )
@@ -832,6 +841,9 @@ namespace LineProductMes
             }
             //开始
             updateBatchTime ( );
+            if ( string . IsNullOrEmpty ( txtANW015 . Text ) )
+                return;
+            getUseForEntry = _bll . getUseForEntry ( Convert . ToDateTime ( txtANW015 . Text ) );
         }
         private void txtANW016_EditValueChanged ( object sender ,EventArgs e )
         {
@@ -854,8 +866,16 @@ namespace LineProductMes
             {
                 if ( txtANW014 . Text . Equals ( "计件" ) )
                 {
-                    row [ "ANX005" ] = dtStart;
-                    row [ "ANX006" ] = dtEnd;
+                    if ( row [ "ANX011" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "ANX005" ] = dtStart;
+                        row [ "ANX006" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "ANX005" ] = DBNull . Value;
+                        row [ "ANX006" ] = DBNull . Value;
+                    }
                     row [ "ANX007" ] = DBNull . Value;
                     row [ "ANX008" ] = DBNull . Value;
                     row [ "ANX016" ] = DBNull . Value;
@@ -865,8 +885,16 @@ namespace LineProductMes
                     row [ "ANX005" ] = DBNull . Value;
                     row [ "ANX006" ] = DBNull . Value;
                     row [ "ANX015" ] = DBNull . Value;
-                    row [ "ANX007" ] = dtStart;
-                    row [ "ANX008" ] = dtEnd;
+                    if ( row [ "ANX011" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "ANX007" ] = dtStart;
+                        row [ "ANX008" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "ANX007" ] = DBNull . Value;
+                        row [ "ANX008" ] = DBNull . Value;
+                    }
                 }
             }
 
@@ -894,6 +922,8 @@ namespace LineProductMes
                 }
                 else
                     rowUser ( row );
+
+                calcuSalaryForSub ( );
             }
         }
         void rowUser ( DataRow row )
@@ -1009,8 +1039,47 @@ namespace LineProductMes
         /// </summary>
         void calcuSalaryForSub ( )
         {
+            if ( tableView == null || tableView . Rows . Count < 1 )
+                return;
             parame = tableView . Compute ( "SUM(ANX010)" ,null ) . ToString ( );
             txtu2 . Text = string . IsNullOrEmpty ( parame ) == true ? 0 . ToString ( ) : Convert . ToDecimal ( parame ) . ToString ( "0.######" );
+
+            calcuSalaryForEntry ( );
+        }
+        /// <summary>
+        /// 入职补贴的工资算到补贴工资中，参与全员工资分配   仅计件
+        /// </summary>
+        void calcuSalaryForEntry ( )
+        {
+            if ( "计时" . Equals ( txtANW014 . Text ) )
+                return;
+            if ( getUseForEntry == null || getUseForEntry . Rows . Count < 1 )
+                return;
+
+            bandedGridView1 . CloseEditor ( );
+            bandedGridView1 . UpdateCurrentRow ( );
+
+            if ( tableView == null || tableView . Rows . Count < 1 )
+                return;
+            entrySala = 0M;
+            DataRow [ ] rows;
+            foreach ( DataRow row in getUseForEntry . Rows )
+            {
+                _body . ANX002 = row [ "EMP001" ] . ToString ( );
+                rows = tableView . Select ( "ANX002='" + _body . ANX002 + "'" );
+                if ( rows . Length > 0 )
+                {
+                    _body . ANX011 = rows [ 0 ] [ "ANX011" ] . ToString ( ) . Trim ( );
+                    if ( !string . IsNullOrEmpty ( _body . ANX011 ) && ( "请假" . Equals ( _body . ANX011 ) || "在职" . Equals ( _body . ANX011 ) ) )
+                    {
+                        _body . ANX015 = string . IsNullOrEmpty ( rows [ 0 ] [ "ANX015" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( rows [ 0 ] [ "ANX015" ] );
+                        _body . ANX016 = string . IsNullOrEmpty ( rows [ 0 ] [ "ANX016" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( rows [ 0 ] [ "ANX016" ] );
+                        entrySala += Convert . ToDecimal ( _body . ANX015 + _body . ANX016 ) * 7;
+                    }
+                }
+            }
+
+            txtu2 . Text = string . IsNullOrEmpty ( txtu2 . Text ) == true ? 0 . ToString ( ) : ( Convert . ToDecimal ( txtu2 . Text ) + entrySala ) . ToString ( "0.######" );
         }
         /// <summary>
         /// 总工资
@@ -1112,7 +1181,7 @@ namespace LineProductMes
                 if ( Convert . ToDecimal ( txtu5 . Text ) == 0 )
                     return;
 
-                resultSalary = ( string . IsNullOrEmpty ( txtu4 . Text ) == true ? 0 : Convert . ToDecimal ( txtu4 . Text ) - ( string . IsNullOrEmpty ( txtu3 . Text ) == true ? 0 : Convert . ToDecimal ( txtu3 . Text ) ) );
+                resultSalary = ( string . IsNullOrEmpty ( txtu4 . Text ) == true ? 0 : Convert . ToDecimal ( txtu4 . Text ) + entrySala - ( string . IsNullOrEmpty ( txtu3 . Text ) == true ? 0 : Convert . ToDecimal ( txtu3 . Text ) ) );
 
 
                 object qj = tableView . Compute ( "sum(ANX018)" ,"ANX011='请假'" );
@@ -1382,6 +1451,18 @@ namespace LineProductMes
             _header . ANW015 = Convert . ToDateTime ( txtANW015 . Text );
             _header . ANW016 = Convert . ToDateTime ( txtANW016 . Text );
 
+            if ( ( Convert . ToDateTime ( _header . ANW016 ) - Convert . ToDateTime ( _header . ANW015 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
+
+            if ( _header . ANW026 > 0 && _header . ANW027 > 0 && string . IsNullOrEmpty ( _header . ANW017 ) )
+            {
+                XtraMessageBox . Show ( "请注明补贴工时原因" );
+                return false;
+            }
+
             return true;
         }
         void printOrExport ( )
@@ -1610,6 +1691,40 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            strWhere = "1=1";
+            strWhere += " AND ANX001='" + txtANW001 . Text + "'";
+
+            DataTable ViewOne = _bll . getTableView ( strWhere );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+            {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                _body . ANX002 = row [ "ANX002" ] . ToString ( );
+                _body . ANX017 = string . IsNullOrEmpty ( row [ "ANX017" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANX017" ] );
+                if ( ViewOne . Select ( "ANX002='" + _body . ANX002 + "' AND ANX017='" + _body . ANX017 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _body . ANX002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         #endregion
 

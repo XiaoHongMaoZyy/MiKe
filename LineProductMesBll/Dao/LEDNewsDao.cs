@@ -149,7 +149,7 @@ namespace LineProductMesBll . Dao
             if ( model . LEF017 )
             {
                 strSql = new StringBuilder ( );
-                strSql . AppendFormat ( "SELECT LEH002 ANN002,LEH003 ANN003,LEH005 ANN005,LEH009 ANN009,DDA001 FROM MIKLEH A LEFT JOIN TPADEA B ON A.LEH003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE LEH001='{0}'" ,model.LEF001 );
+                strSql . AppendFormat ( "SELECT LEH002 ANN002,LEH003 ANN003,LEH005 ANN005,LEH009 ANN009,DDA001 FROM MIKLEH A LEFT JOIN TPADEA B ON A.LEH003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE LEH001='{0}'" ,model . LEF001 );
 
                 GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,model . LEF001 ,model . LEF011 );
             }

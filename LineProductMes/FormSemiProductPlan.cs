@@ -7,6 +7,7 @@ using DevExpress . Utils . Paint;
 using DevExpress . XtraTreeList . Nodes . Operations;
 using DevExpress . XtraTreeList . Columns;
 using DevExpress . XtraTreeList . Nodes;
+using System . Windows . Forms;
 
 namespace LineProductMes
 {
@@ -22,10 +23,12 @@ namespace LineProductMes
             _bll = new LineProductMesBll . Bll . SemiProductPlanBll ( );
             model = new LineProductMesEntityu . SemiProductPlanEntity ( );
 
-            ToolBarContain . ToolbarsC ( barTool ,new DevExpress . XtraBars . BarItem [ ] { toolCanecl ,toolSave  ,toolPrint ,toolCancellation ,toolExamin ,toolDelete ,toolEdit ,toolAdd } );
+            ToolBarContain . ToolbarsC ( barTool ,new DevExpress . XtraBars . BarItem [ ] { toolCanecl ,toolSave  ,toolPrint ,toolCancellation ,toolExamin ,toolDelete ,toolEdit } );
             GrivColumnStyle . setColumnStyle ( treeList1 );
             FieldInfo fi = typeof ( XPaint ) . GetField ( "graphics" ,BindingFlags . Static | BindingFlags . NonPublic );
             fi . SetValue ( null ,new DrawXPaint ( ) );
+
+            toolAdd . Caption = "展开";
         }
 
         #region Main
@@ -45,6 +48,24 @@ namespace LineProductMes
             ViewExport . ExportToExcel ( this . Text ,this . treeList1 );
 
             return base . ExportBase ( );
+        }
+        protected override int Add ( )
+        {
+            if ( toolAdd . Caption . Equals ( "展开" ) )
+            {
+                treeList1 . ExpandAll ( );
+                toolAdd . Caption = "折叠";
+            }
+            else
+            {
+                toolAdd . Caption = "展开";
+                foreach ( TreeListNode node in treeList1 . Nodes )
+                {
+                    treeList1 . Nodes . TreeList . FindNodeByID ( node . Id ) . Expanded = false;
+                }
+            }
+
+            return base . Add ( );
         }
         #endregion
 

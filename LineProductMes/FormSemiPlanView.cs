@@ -17,14 +17,11 @@ namespace LineProductMes
         DateTime dt;
         string focuseName=string.Empty;
 
-
         public FormSemiPlanView ( )
         {
             InitializeComponent ( );
 
             _bll = new LineProductMesBll . Bll . SemiProductPlanBll ( );
-
-           
 
             ToolBarContain . ToolbarsC ( barTool ,new DevExpress . XtraBars . BarItem [ ] { toolCanecl ,toolSave ,toolPrint ,toolCancellation ,toolExamin ,toolDelete ,toolEdit } );
             FieldInfo fi = typeof ( XPaint ) . GetField ( "graphics" ,BindingFlags . Static | BindingFlags . NonPublic );
@@ -68,6 +65,7 @@ namespace LineProductMes
             gridView1 . PopulateColumns ( );
             column ( );
             toolExport . Visibility = DevExpress . XtraBars . BarItemVisibility . Always;
+            GridViewMoHuSelect . SetFilter ( new DevExpress . XtraGrid . Views . Grid . GridView [ ] { gridView1 ,View1 } );
 
             return base . Query ( );
         }
@@ -97,12 +95,14 @@ namespace LineProductMes
                 column . AppearanceHeader . TextOptions . WordWrap = DevExpress . Utils . WordWrap . Wrap;
                 column . BestFit ( );
                 column . Summary . Clear ( );
-                if ( column . FieldName != "品号" && column . FieldName != "品名" && column . FieldName != "规格" && column . FieldName != "总量" && column . FieldName != "生产部门" && column . FieldName != "仓库" && column . FieldName != "单位" && column . FieldName != "可用库存量" )
+                if ( column . FieldName != "品号" && column . FieldName != "品名" && column . FieldName != "规格" && column . FieldName != "总量" && column . FieldName != "生产部门" && column . FieldName != "仓库" && column . FieldName != "单位" && column . FieldName != "可用库存量" && column . FieldName != "生产量" )
                 {
                     object obj = tableView . Compute ( "COUNT([" + column . FieldName + "])" ,"[" + column . FieldName + "]>0" );
                     column . Summary . Add ( DevExpress . Data . SummaryItemType . Custom ,column . FieldName ,obj . ToString ( ) );
                     column . Width = 45;
                 }
+                else if ( column . FieldName == "生产量" )
+                    column . ToolTip = "总量-可用库存量-上级BOM库存量*组成量之和     ";
             }
         }
         private void gridView1_CustomDrawRowIndicator ( object sender ,DevExpress . XtraGrid . Views . Grid . RowIndicatorCustomDrawEventArgs e )
@@ -133,13 +133,13 @@ namespace LineProductMes
                 return;
             if ( e . Column . FieldName == "可用库存量" )
                 kcl = string . IsNullOrEmpty ( row [ e . Column . FieldName ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ e . Column . FieldName ] );
-            if ( e . Column . FieldName != "品号" && e . Column . FieldName != "品名" && e . Column . FieldName != "规格" && e . Column . FieldName != "总量" && e . Column . FieldName != "生产部门" && e . Column . FieldName != "仓库" && e . Column . FieldName != "单位" && e . Column . FieldName != "可用库存量" && e . Column . FieldName != "DX$CheckboxSelectorColumn" )
+            if ( e . Column . FieldName != "品号" && e . Column . FieldName != "品名" && e . Column . FieldName != "规格" && e . Column . FieldName != "总量" && e . Column . FieldName != "生产部门" && e . Column . FieldName != "仓库" && e . Column . FieldName != "单位" && e . Column . FieldName != "可用库存量" && e . Column . FieldName != "生产量" && e . Column . FieldName != "DX$CheckboxSelectorColumn" )
             {
                 if ( Convert . ToDateTime ( e . Column . FieldName ) >= dt && !string . IsNullOrEmpty ( row [ e . Column . FieldName ] . ToString ( ) ) )
                 {
                     foreach ( DataColumn colu in tableView . Columns )
                     {
-                        if ( colu . ColumnName != "品号" && colu . ColumnName != "品名" && colu . ColumnName != "规格" && colu . ColumnName != "总量" && colu . ColumnName != "生产部门" && colu . ColumnName != "仓库" && colu . ColumnName != "单位" && colu . ColumnName != "可用库存量" && colu . ColumnName != "DX$CheckboxSelectorColumn" )
+                        if ( colu . ColumnName != "品号" && colu . ColumnName != "品名" && colu . ColumnName != "规格" && colu . ColumnName != "总量" && colu . ColumnName != "生产部门" && colu . ColumnName != "仓库" && colu . ColumnName != "单位" && colu . ColumnName != "可用库存量" && colu . ColumnName != "生产量" && colu . ColumnName != "DX$CheckboxSelectorColumn" )
                         {
                             if ( Convert . ToDateTime ( colu . ColumnName ) <= Convert . ToDateTime ( e . Column . FieldName ) )
                                 other += string . IsNullOrEmpty ( row [ colu . ColumnName ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ colu . ColumnName ] );

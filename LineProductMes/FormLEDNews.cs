@@ -23,7 +23,7 @@ namespace LineProductMes
         LineProductMesBll.Bll.LEDNewsBll _bll=null;
 
         Thread thread; SynchronizationContext m_SyncContext = null;
-    
+        
         DataTable tableView,tableViewTwo,tableUser,tableWorker,tableLocal,tableProduct,tablePrintOne,tablePrintTwo,tableOtherSur,tablePrintTre,tablePrintFor,tablePrintFiv;
 
         string state=string.Empty,strWhere="1=1",focuseName=string.Empty;
@@ -190,6 +190,9 @@ namespace LineProductMes
                 _header . LEF017 = true;
             else
                 _header . LEF017 = false;
+
+            if ( _header . LEF017 && checkDataConsistency ( ) == false )
+                return 0;
 
             if ( _header . LEF017 == false )
             {
@@ -735,8 +738,16 @@ namespace LineProductMes
             {
                 if ( txtLEF021 . Text . Equals ( "计件" ) )
                 {
-                    row [ "LEG005" ] = dtStart;
-                    row [ "LEG006" ] = dtEnd;
+                    if ( row [ "LEG012" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LEG005" ] = dtStart;
+                        row [ "LEG006" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LEG005" ] = DBNull . Value;
+                        row [ "LEG006" ] = DBNull . Value;
+                    }
                     //row [ "LEG014" ] = null;
                     row [ "LEG008" ] = DBNull . Value;
                     row [ "LEG009" ] = DBNull . Value;
@@ -747,8 +758,16 @@ namespace LineProductMes
                     row [ "LEG005" ] = DBNull . Value;
                     row [ "LEG006" ] = DBNull . Value;
                     row [ "LEG014" ] = DBNull . Value;
-                    row [ "LEG008" ] = dtStart;
-                    row [ "LEG009" ] = dtEnd;
+                    if ( row [ "LEG012" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "LEG008" ] = dtStart;
+                        row [ "LEG009" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "LEG008" ] = DBNull . Value;
+                        row [ "LEG009" ] = DBNull . Value;
+                    }
                     //row [ "LEG015" ] = null;
                 }
             }
@@ -1125,7 +1144,14 @@ namespace LineProductMes
             _header . LEF023 = Convert . ToDateTime ( txtLEF023 . Text );
             _header . LEF024 = Convert . ToDateTime ( txtLEF024 . Text );
 
-             outResult = 0M;
+
+            if ( ( Convert . ToDateTime ( _header . LEF024 ) - Convert . ToDateTime ( _header . LEF023 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
+
+            outResult = 0M;
             if ( !string . IsNullOrEmpty ( txtLEF026 . Text ) && decimal . TryParse ( txtLEF026 . Text ,out outResult ) == false )
             {
                 XtraMessageBox . Show ( "补贴工时是数字" );
@@ -1154,6 +1180,14 @@ namespace LineProductMes
             _header . LEF020 = string . IsNullOrEmpty ( txtLEF020 . Text ) == true ? 0 : Convert . ToDecimal ( txtLEF020 . Text );
             _header . LEF021 = txtLEF021 . Text;
             _header . LEF025 = string . IsNullOrEmpty ( txtLEF025 . Text ) == true ? 0 : Convert . ToDecimal ( txtLEF025 . Text );
+
+
+            if ( _header .LEF026 > 0 && _header . LEF027 > 0 && string . IsNullOrEmpty ( _header . LEF015 ) )
+            {
+                XtraMessageBox . Show ( "请注明补贴工时原因" );
+                return false;
+            }
+
             return result;
         }
         /// <summary>
@@ -1516,6 +1550,40 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            strWhere = "1=1";
+            strWhere += " AND LEG001='" + _header . LEF001 + "'";
+
+            DataTable ViewOne = _bll . getTableView ( strWhere );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < GridView1 . RowCount ; i++ )
+            {
+                row = GridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                _body . LEG002 = row [ "LEG002" ] . ToString ( );
+                _body . LEG016 = string . IsNullOrEmpty ( row [ "LEG016" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "LEG016" ] );
+                if ( ViewOne . Select ( "LEG002='" + _body . LEG002 + "' AND LEG016='" + _body . LEG016 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _body . LEG002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         #endregion
 

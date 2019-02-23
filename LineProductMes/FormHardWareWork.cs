@@ -181,6 +181,9 @@ namespace LineProductMes
             else
                 _header . HAW018 = false;
 
+            if ( _header . HAW018 && checkDataConsistency ( ) == false )
+                return 0;
+
             if ( _header . HAW018 == false && !string . IsNullOrEmpty ( _header . HAW022 ) )
             {
                 if ( _bll . boolExamineSGM ( _header . HAW022 ) )
@@ -827,8 +830,16 @@ namespace LineProductMes
             {
                 if ( txtHAW011 . Text . Equals ( "计件" ) )
                 {
-                    row [ "HAX009" ] = dtStart;
-                    row [ "HAX010" ] = dtEnd;
+                    if ( row [ "HAX015" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "HAX009" ] = dtStart;
+                        row [ "HAX010" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "HAX009" ] = DBNull . Value;
+                        row [ "HAX010" ] = DBNull . Value;
+                    }
                     row [ "HAX011" ] = DBNull . Value;
                     row [ "HAX012" ] = DBNull . Value;
                     row [ "HAX019" ] = DBNull . Value;
@@ -838,8 +849,16 @@ namespace LineProductMes
                     row [ "HAX009" ] = DBNull . Value;
                     row [ "HAX010" ] = DBNull . Value;
                     row [ "HAX018" ] = DBNull . Value;
-                    row [ "HAX011" ] = dtStart;
-                    row [ "HAX012" ] = dtEnd;
+                    if ( row [ "HAX015" ] . ToString ( ) . Equals ( "在职" ) )
+                    {
+                        row [ "HAX011" ] = dtStart;
+                        row [ "HAX012" ] = dtEnd;
+                    }
+                    else
+                    {
+                        row [ "HAX011" ] = DBNull . Value;
+                        row [ "HAX012" ] = DBNull . Value;
+                    }
                 }
             }
             calcuTsumTime ( );
@@ -1024,6 +1043,12 @@ namespace LineProductMes
             _header . HAW021 = string . IsNullOrEmpty ( txtHAW021 . Text ) == true ? 0 : Convert . ToDecimal ( txtHAW021 . Text );
             _header . HAW024 = Convert . ToDateTime ( txtHAW024 . Text );
             _header . HAW025 = Convert . ToDateTime ( txtHAW025 . Text );
+
+            if ( ( Convert . ToDateTime ( _header . HAW025 ) - Convert . ToDateTime ( _header . HAW024 ) ) . Days > 0 )
+            {
+                XtraMessageBox . Show ( "开完工时间不允许跨天" );
+                return false;
+            }
 
             bandedGridView1 . CloseEditor ( );
             bandedGridView1 . UpdateCurrentRow ( );
@@ -1705,6 +1730,40 @@ namespace LineProductMes
             dt = LineProductMesBll . UserInfoMation . sysTime;
             dtStart = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 08:00" ) );
             dtEnd = Convert . ToDateTime ( dt . ToString ( "yyyy-MM-dd 17:00" ) );
+        }
+        /// <summary>
+        /// 检查前后台数据一致性
+        /// </summary>
+        /// <returns></returns>
+        bool checkDataConsistency ( )
+        {
+            result = true;
+
+            strWhere = "1=1";
+            strWhere += " AND HAX001='" + _header . HAW001 + "'";
+
+            DataTable ViewOne = _bll . getTableView ( strWhere );
+            if ( ViewOne == null || ViewOne . Rows . Count < 1 )
+            {
+                XtraMessageBox . Show ( "后台无工资数据,请重新保存" );
+                return false;
+            }
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+            {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                _body . HAX002 = row [ "HAX002" ] . ToString ( );
+                _body . HAX020 = string . IsNullOrEmpty ( row [ "HAX020" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "HAX020" ] );
+                if ( ViewOne . Select ( "HAX002='" + _body . HAX002 + "' AND HAX020='" + _body . HAX020 + "'" ) . Length < 1 )
+                {
+                    XtraMessageBox . Show ( "工号:" + _body . HAX002 + "的工资与后台不一致,请重新编辑保存" );
+                    result = false;
+                    break;
+                }
+            }
+            return result;
         }
         #endregion
 

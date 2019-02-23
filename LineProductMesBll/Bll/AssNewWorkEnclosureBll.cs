@@ -11,10 +11,13 @@ namespace LineProductMesBll . Bll
     {
         private readonly Dao.EmployeeDao dalE=null;
         private readonly Dao.AssNewWorkEnclosureDao dal=null;
+        private readonly Dao.AssNewWorkDao dalA=null;
+
         public AssNewWorkEnclosureBll ( )
         {
             dal = new Dao . AssNewWorkEnclosureDao ( );
             dalE = new Dao . EmployeeDao ( );
+            dalA = new Dao . AssNewWorkDao ( );
         }
 
         /// <summary>
@@ -229,6 +232,14 @@ namespace LineProductMesBll . Bll
         {
             return dal . getTablePrintFiv ( oddNum );
         }
-
+        /// <summary>
+        /// 获取入职时间少于等于7天的入职人员
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public DataTable getUseForEntry ( DateTime dt )
+        {
+            return dalA . getUseForEntry ( dt );
+        }
     }
 }

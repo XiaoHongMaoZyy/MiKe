@@ -42,9 +42,15 @@
             this.ANX007 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ANX008 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ANX017 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANW011 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANW013 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANX015 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANX016 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANX = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ANW020 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.dtTime = new DevExpress.XtraEditors.DateEdit();
-            this.tYear = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.yearOrMonth = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDateEdit1)).BeginInit();
@@ -53,7 +59,7 @@
             this.splitContainerControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tYear.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // toolExport
@@ -94,12 +100,19 @@
             this.ANX006,
             this.ANX007,
             this.ANX008,
-            this.ANX017});
+            this.ANX017,
+            this.ANW011,
+            this.ANW013,
+            this.ANX015,
+            this.ANX016,
+            this.ANX,
+            this.ANW020});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsView.ShowFooter = true;
             this.gridView1.OptionsView.ShowGroupPanel = false;
+            this.gridView1.RowCellStyle += new DevExpress.XtraGrid.Views.Grid.RowCellStyleEventHandler(this.gridView1_RowCellStyle);
             // 
             // ANX001
             // 
@@ -110,6 +123,7 @@
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "ANX001", "{0}")});
             this.ANX001.Visible = true;
             this.ANX001.VisibleIndex = 0;
+            this.ANX001.Width = 65;
             // 
             // ANX011
             // 
@@ -117,7 +131,8 @@
             this.ANX011.FieldName = "ANX011";
             this.ANX011.Name = "ANX011";
             this.ANX011.Visible = true;
-            this.ANX011.VisibleIndex = 1;
+            this.ANX011.VisibleIndex = 2;
+            this.ANX011.Width = 67;
             // 
             // ANX002
             // 
@@ -125,7 +140,8 @@
             this.ANX002.FieldName = "ANX002";
             this.ANX002.Name = "ANX002";
             this.ANX002.Visible = true;
-            this.ANX002.VisibleIndex = 2;
+            this.ANX002.VisibleIndex = 3;
+            this.ANX002.Width = 67;
             // 
             // ANX003
             // 
@@ -133,7 +149,8 @@
             this.ANX003.FieldName = "ANX003";
             this.ANX003.Name = "ANX003";
             this.ANX003.Visible = true;
-            this.ANX003.VisibleIndex = 3;
+            this.ANX003.VisibleIndex = 4;
+            this.ANX003.Width = 67;
             // 
             // ANX004
             // 
@@ -141,7 +158,8 @@
             this.ANX004.FieldName = "ANX004";
             this.ANX004.Name = "ANX004";
             this.ANX004.Visible = true;
-            this.ANX004.VisibleIndex = 4;
+            this.ANX004.VisibleIndex = 7;
+            this.ANX004.Width = 67;
             // 
             // ANX005
             // 
@@ -150,7 +168,8 @@
             this.ANX005.FieldName = "ANX005";
             this.ANX005.Name = "ANX005";
             this.ANX005.Visible = true;
-            this.ANX005.VisibleIndex = 5;
+            this.ANX005.VisibleIndex = 8;
+            this.ANX005.Width = 67;
             // 
             // repositoryItemDateEdit1
             // 
@@ -173,7 +192,8 @@
             this.ANX006.FieldName = "ANX006";
             this.ANX006.Name = "ANX006";
             this.ANX006.Visible = true;
-            this.ANX006.VisibleIndex = 6;
+            this.ANX006.VisibleIndex = 9;
+            this.ANX006.Width = 67;
             // 
             // ANX007
             // 
@@ -182,7 +202,8 @@
             this.ANX007.FieldName = "ANX007";
             this.ANX007.Name = "ANX007";
             this.ANX007.Visible = true;
-            this.ANX007.VisibleIndex = 7;
+            this.ANX007.VisibleIndex = 11;
+            this.ANX007.Width = 68;
             // 
             // ANX008
             // 
@@ -191,7 +212,8 @@
             this.ANX008.FieldName = "ANX008";
             this.ANX008.Name = "ANX008";
             this.ANX008.Visible = true;
-            this.ANX008.VisibleIndex = 8;
+            this.ANX008.VisibleIndex = 12;
+            this.ANX008.Width = 68;
             // 
             // ANX017
             // 
@@ -203,7 +225,73 @@
             this.ANX017.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "ANX017", "{0:0.######}")});
             this.ANX017.Visible = true;
-            this.ANX017.VisibleIndex = 9;
+            this.ANX017.VisibleIndex = 15;
+            this.ANX017.Width = 106;
+            // 
+            // ANW011
+            // 
+            this.ANW011.Caption = "部门";
+            this.ANW011.FieldName = "ANW011";
+            this.ANW011.Name = "ANW011";
+            this.ANW011.Visible = true;
+            this.ANW011.VisibleIndex = 5;
+            this.ANW011.Width = 67;
+            // 
+            // ANW013
+            // 
+            this.ANW013.Caption = "班组";
+            this.ANW013.FieldName = "ANW013";
+            this.ANW013.Name = "ANW013";
+            this.ANW013.Visible = true;
+            this.ANW013.VisibleIndex = 6;
+            this.ANW013.Width = 67;
+            // 
+            // ANX015
+            // 
+            this.ANX015.Caption = "计件工时";
+            this.ANX015.DisplayFormat.FormatString = "0.######";
+            this.ANX015.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.ANX015.FieldName = "ANX015";
+            this.ANX015.Name = "ANX015";
+            this.ANX015.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
+            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "ANX015", "{0:0.######}")});
+            this.ANX015.Visible = true;
+            this.ANX015.VisibleIndex = 10;
+            this.ANX015.Width = 59;
+            // 
+            // ANX016
+            // 
+            this.ANX016.Caption = "计时工时";
+            this.ANX016.DisplayFormat.FormatString = "0.######";
+            this.ANX016.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.ANX016.FieldName = "ANX016";
+            this.ANX016.Name = "ANX016";
+            this.ANX016.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
+            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "ANX016", "{0:0.######}")});
+            this.ANX016.Visible = true;
+            this.ANX016.VisibleIndex = 13;
+            // 
+            // ANX
+            // 
+            this.ANX.Caption = "总工时";
+            this.ANX.DisplayFormat.FormatString = "0.######";
+            this.ANX.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.ANX.FieldName = "ANX";
+            this.ANX.Name = "ANX";
+            this.ANX.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
+            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "ANX", "{0:0.######}")});
+            this.ANX.Visible = true;
+            this.ANX.VisibleIndex = 14;
+            this.ANX.Width = 50;
+            // 
+            // ANW020
+            // 
+            this.ANW020.Caption = "审核";
+            this.ANW020.FieldName = "ANW020";
+            this.ANW020.Name = "ANW020";
+            this.ANW020.Visible = true;
+            this.ANW020.VisibleIndex = 1;
+            this.ANW020.Width = 35;
             // 
             // splitContainerControl1
             // 
@@ -211,8 +299,8 @@
             this.splitContainerControl1.Horizontal = false;
             this.splitContainerControl1.Location = new System.Drawing.Point(0, 24);
             this.splitContainerControl1.Name = "splitContainerControl1";
+            this.splitContainerControl1.Panel1.Controls.Add(this.yearOrMonth);
             this.splitContainerControl1.Panel1.Controls.Add(this.dtTime);
-            this.splitContainerControl1.Panel1.Controls.Add(this.tYear);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.gridControl1);
             this.splitContainerControl1.Panel2.Text = "Panel2";
@@ -224,7 +312,7 @@
             // dtTime
             // 
             this.dtTime.EditValue = null;
-            this.dtTime.Location = new System.Drawing.Point(118, 11);
+            this.dtTime.Location = new System.Drawing.Point(147, 13);
             this.dtTime.MenuManager = this.barManager1;
             this.dtTime.Name = "dtTime";
             this.dtTime.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
@@ -234,21 +322,20 @@
             this.dtTime.Size = new System.Drawing.Size(149, 20);
             this.dtTime.TabIndex = 1;
             // 
-            // tYear
+            // yearOrMonth
             // 
-            this.tYear.Location = new System.Drawing.Point(12, 11);
-            this.tYear.MenuManager = this.barManager1;
-            this.tYear.Name = "tYear";
-            this.tYear.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.yearOrMonth.Location = new System.Drawing.Point(12, 13);
+            this.yearOrMonth.MenuManager = this.barManager1;
+            this.yearOrMonth.Name = "yearOrMonth";
+            this.yearOrMonth.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.tYear.Properties.Items.AddRange(new object[] {
+            this.yearOrMonth.Properties.Items.AddRange(new object[] {
             "",
             "年",
             "月",
             "日"});
-            this.tYear.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.tYear.Size = new System.Drawing.Size(100, 20);
-            this.tYear.TabIndex = 0;
+            this.yearOrMonth.Size = new System.Drawing.Size(100, 20);
+            this.yearOrMonth.TabIndex = 2;
             // 
             // FormSalaryByEveryOne
             // 
@@ -268,7 +355,7 @@
             this.splitContainerControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tYear.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -290,7 +377,13 @@
         private DevExpress . XtraGrid . Columns . GridColumn ANX017;
         private DevExpress . XtraEditors . SplitContainerControl splitContainerControl1;
         private DevExpress . XtraEditors . DateEdit dtTime;
-        private DevExpress . XtraEditors . ComboBoxEdit tYear;
         private DevExpress . XtraEditors . Repository . RepositoryItemDateEdit repositoryItemDateEdit1;
+        private DevExpress . XtraGrid . Columns . GridColumn ANW011;
+        private DevExpress . XtraGrid . Columns . GridColumn ANW013;
+        private DevExpress . XtraGrid . Columns . GridColumn ANX015;
+        private DevExpress . XtraGrid . Columns . GridColumn ANX016;
+        private DevExpress . XtraGrid . Columns . GridColumn ANX;
+        private DevExpress . XtraGrid . Columns . GridColumn ANW020;
+        private DevExpress . XtraEditors . ComboBoxEdit yearOrMonth;
     }
 }

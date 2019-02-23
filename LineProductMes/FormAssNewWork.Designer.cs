@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent ( )
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAssNewWork));
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
@@ -105,7 +104,7 @@
             this.RAA0181 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.RAA0081 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip();
             this.copy = new System.Windows.Forms.ToolStripMenuItem();
             this.bandedGridView1 = new DevExpress.XtraGrid.Views.BandedGrid.BandedGridView();
             this.gridBand1 = new DevExpress.XtraGrid.Views.BandedGrid.GridBand();

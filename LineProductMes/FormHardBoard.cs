@@ -295,6 +295,7 @@ namespace LineProductMes
             if ( start == 1 )
                 chartControl1 . Series . Clear ( );
             chartControl1 . Series . Add ( seOne );
+            start = 1;
         }
 
         void chartTwo ( )
@@ -330,6 +331,7 @@ namespace LineProductMes
             if ( start == 1 )
                 chartControl2 . Series . Clear ( );
             chartControl2 . Series . Add ( seOne );
+            start = 1;
         }
 
         private void gridView1_RowCellStyle ( object sender ,DevExpress . XtraGrid . Views . Grid . RowCellStyleEventArgs e )

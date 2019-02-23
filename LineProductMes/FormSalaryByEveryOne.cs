@@ -36,22 +36,23 @@ namespace LineProductMes
 
         protected override int Query ( )
         {
-            if ( string . IsNullOrEmpty ( tYear . Text ) )
-            {
-                XtraMessageBox . Show ( "请选择年月日" );return 0;
-            }
             if ( string . IsNullOrEmpty ( dtTime . Text ) )
             {
                 XtraMessageBox . Show ( "请选择日期" );
                 return 0;
             }
+            if ( string . IsNullOrEmpty ( yearOrMonth . Text ) )
+            {
+                XtraMessageBox . Show ( "请选择年月日" );
+                return 0;
+            }
 
             string strWhere = string . Empty;
-            if ( tYear . Text . Equals ( "年" ) )
+            if ( "年" . Equals ( yearOrMonth . Text ) )
                 strWhere = Convert . ToDateTime ( dtTime . Text ) . ToString ( "yyyy" );
-            else if ( tYear . Text . Equals ( "月" ) )
+            else if ( "月" . Equals ( yearOrMonth . Text ) )
                 strWhere = Convert . ToDateTime ( dtTime . Text ) . ToString ( "yyyyMM" );
-            else if ( tYear . Text . Equals ( "日" ) )
+            else if ( "日" . Equals ( yearOrMonth . Text ) )
                 strWhere = Convert . ToDateTime ( dtTime . Text ) . ToString ( "yyyyMMdd" );
 
             DataTable table = _bll . getTableView ( strWhere );
@@ -66,5 +67,13 @@ namespace LineProductMes
             return base . Export ( );
         }
 
+        private void gridView1_RowCellStyle ( object sender ,DevExpress . XtraGrid . Views . Grid . RowCellStyleEventArgs e )
+        {
+            if ( e . Column . FieldName == "ANX017" )
+            {
+                if ( e . CellValue != null && e . CellValue != DBNull . Value && Convert . ToDecimal ( e . CellValue ) > 250 )
+                    e . Appearance . BackColor = Color . Red;
+            }
+        }
     }
 }
