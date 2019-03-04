@@ -444,7 +444,8 @@ namespace LineProductMes
                 {
                     row [ "LGP007" ] = DBNull . Value;
                 }
-                addRow ( "LGP007" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRow ( "LGP007" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "LGP008" )
             {
@@ -452,7 +453,8 @@ namespace LineProductMes
                 {
                     row [ "LGP008" ] = DBNull . Value;
                 }
-                addRow ( "LGP008" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRow ( "LGP008" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "LGP009" )
             {
@@ -460,7 +462,8 @@ namespace LineProductMes
                 {
                     row [ "LGP009" ] = DBNull . Value;
                 }
-                addRow ( "LGP009" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRow ( "LGP009" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "LGP010" )
             {
@@ -468,36 +471,37 @@ namespace LineProductMes
                 {
                     row [ "LGP010" ] = DBNull . Value;
                 }
-                addRow ( "LGP010" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRow ( "LGP010" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "LGP014" )
             {
                 //lgp011
-                int selectIndex = bandedGridView1 . FocusedRowHandle;
-                string lgp014Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "LGP014" ] . ToString ( );
+                //int selectIndex = bandedGridView1 . FocusedRowHandle;
+                //string lgp014Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "LGP014" ] . ToString ( );
 
-                if ( string . IsNullOrEmpty ( lgp014Result ) )
-                    _bodyTwo . LGP014 = 0;
-                else
-                    _bodyTwo . LGP014 = Convert . ToDecimal ( lgp014Result );
+                //if ( string . IsNullOrEmpty ( lgp014Result ) )
+                //    _bodyTwo . LGP014 = 0;
+                //else
+                //    _bodyTwo . LGP014 = Convert . ToDecimal ( lgp014Result );
 
-                for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
-                {
-                    row = tableViewTwo . Rows [ i ];
-                    if ( row [ "LGP011" ] != null && row [ "LGP011" ] . ToString ( ) != string . Empty )
-                    {
-                        row . BeginEdit ( );
-                        row [ "LGP014" ] = _bodyTwo . LGP014;
-                        row . EndEdit ( );
-                    }
-                    if ( i == selectIndex && ( row [ "LGP011" ] == null || row [ "LGP011" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "LGP014" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl2 . Refresh ( );
+                //for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
+                //{
+                //    row = tableViewTwo . Rows [ i ];
+                //    if ( row [ "LGP011" ] != null && row [ "LGP011" ] . ToString ( ) != string . Empty )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "LGP014" ] = _bodyTwo . LGP014;
+                //        row . EndEdit ( );
+                //    }
+                //    if ( i == selectIndex && ( row [ "LGP011" ] == null || row [ "LGP011" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "LGP014" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl2 . Refresh ( );
 
                 calcuTsumTime ( );
             }
@@ -576,6 +580,9 @@ namespace LineProductMes
                 if ( _bodyOne . idx > 0 && !listOne . Contains ( _bodyOne . idx . ToString ( ) ) )
                     listOne . Add ( _bodyOne . idx . ToString ( ) );
                 tableViewOne . Rows . Remove ( row );
+
+                calcuTsumTime ( );
+
                 gridControl1 . Refresh ( );
             }
         }
@@ -592,6 +599,9 @@ namespace LineProductMes
                 if ( _bodyTwo . idx > 0 && !listTwo . Contains ( _bodyTwo . idx . ToString ( ) ) )
                     listTwo . Add ( _bodyTwo . idx . ToString ( ) );
                 tableViewTwo . Rows . Remove ( row );
+
+                calcuTsumTime ( );
+
                 gridControl2 . Refresh ( );
             }
         }
@@ -767,18 +777,26 @@ namespace LineProductMes
             gridControl1 . DataSource = null;
             gridControl2 . DataSource = null;
             layoutControlItem3 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+            newList ( );
         }
         void controlUnEnable ( )
         {
             txtLGN005 . ReadOnly = txtLGN006 . ReadOnly =txtLGN007.ReadOnly= txtLGN009 . ReadOnly = txtLGN010 . ReadOnly =txtLGN011.ReadOnly=txtLGN012.ReadOnly= true;
             gridView1 . OptionsBehavior.Editable = false;
             bandedGridView1 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtLGN005 . ReadOnly = txtLGN006 . ReadOnly = txtLGN007 . ReadOnly = txtLGN009 . ReadOnly = txtLGN010 . ReadOnly = txtLGN011 . ReadOnly = txtLGN012 . ReadOnly = false;
             gridView1 . OptionsBehavior . Editable = true;
             bandedGridView1 . OptionsBehavior . Editable = true;
+            newList ( );
+        }
+        void newList ( )
+        {
+            listOne = new List<string> ( );
+            listTwo = new List<string> ( );
         }
         void InitData ( )
         {
@@ -813,6 +831,52 @@ namespace LineProductMes
             if ( tableViewTwo == null || tableViewTwo . Rows . Count < 1 )
                 return false;
 
+            calcuTsumTime ( );
+
+            gridView1 . CloseEditor ( );
+            gridView1 . UpdateCurrentRow ( );
+
+            bandedGridView1 . CloseEditor ( );
+            bandedGridView1 . UpdateCurrentRow ( );
+
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
+            {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                row . ClearErrors ( );
+                _bodyTwo . LGP003 = row [ "LGP003" ] . ToString ( );
+                _bodyTwo . LGP002 = workShopTime . checkWhetherOrNotSameDay ( txtLGN009 . Text ,row [ "LGP007" ] . ToString ( ) );
+                if ( _bodyTwo . LGP002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . LGP003 + "计时开工" + _bodyTwo . LGP002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . LGP002 = workShopTime . checkWhetherOrNotSameDay ( txtLGN009 . Text ,row [ "LGP008" ] . ToString ( ) );
+                if ( _bodyTwo . LGP002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . LGP003 + "计时完工" + _bodyTwo . LGP002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . LGP002 = workShopTime . checkWhetherOrNotSameDay ( txtLGN009 . Text ,row [ "LGP009" ] . ToString ( ) );
+                if ( _bodyTwo . LGP002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . LGP003 + "计件开工" + _bodyTwo . LGP002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . LGP002 = workShopTime . checkWhetherOrNotSameDay ( txtLGN009 . Text ,row [ "LGP010" ] . ToString ( ) );
+                if ( _bodyTwo . LGP002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . LGP003 + "计件完工" + _bodyTwo . LGP002 ,"提示" );
+                    result = false;
+                    break;
+                }
+            }
+
             var query = from p in tableViewOne . AsEnumerable ( )
                         group p by new
                         {
@@ -842,13 +906,39 @@ namespace LineProductMes
             if ( result == false )
                 return false;
 
-            foreach ( DataRow row in tableViewOne . Rows )
+            //for ( int i = 0 ; i < gridView1 . RowCount ; i++ )
+            //{
+            //    DataRow row = gridView1 . GetDataRow ( i );
+            //    if ( row == null )
+            //        continue;
+            //    row . ClearErrors ( );
+            //    _bodyOne . LOG006 = string . IsNullOrEmpty ( row [ "U4" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "U4" ] . ToString ( ) );
+            //    _bodyOne . LOG008 = string . IsNullOrEmpty ( row [ "LOG008" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "LOG008" ] . ToString ( ) );
+            //    if ( _bodyOne . LOG008 > _bodyOne . LOG006 )
+            //    {
+            //        XtraMessageBox . Show ( "销货单号:" + row [ "LOG002" ] + "\n\r序号:" + row [ "LOG003" ] + "\n\r完工数量多于未完工数量" );
+            //        result = false;
+            //        break;
+            //    }
+
+            //    if ( "计件" . Equals ( txtLGN007 . Text ) )
+            //    {
+            //        if ( row [ "LOG007" ] == null || row [ "LOG007" ] . ToString ( ) == string . Empty || Convert . ToDecimal ( row [ "LOG007" ] ) <= 0 )
+            //        {
+            //            row . SetColumnError ( "LOG007" ,"必须大于0   " );
+            //            result = false;
+            //            break;
+            //        }
+            //    }
+            //}
+
+            foreach ( DataRow rows in tableViewOne . Rows )
             {
-                _bodyOne . LOG006 = string . IsNullOrEmpty ( row [ "U4" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "U4" ] . ToString ( ) );
-                _bodyOne . LOG008 = string . IsNullOrEmpty ( row [ "LOG008" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "LOG008" ] . ToString ( ) );
+                _bodyOne . LOG006 = string . IsNullOrEmpty ( rows [ "U4" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( rows [ "U4" ] . ToString ( ) );
+                _bodyOne . LOG008 = string . IsNullOrEmpty ( rows [ "LOG008" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( rows [ "LOG008" ] . ToString ( ) );
                 if ( _bodyOne . LOG008 > _bodyOne . LOG006 )
                 {
-                    XtraMessageBox . Show ( "销货单号:" + row [ "LOG002" ] + "\n\r序号:" + row [ "LOG003" ] + "\n\r完工数量多于未完工数量" );
+                    XtraMessageBox . Show ( "销货单号:" + rows [ "LOG002" ] + "\n\r序号:" + rows [ "LOG003" ] + "\n\r完工数量多于未完工数量" );
                     result = false;
                     break;
                 }
@@ -930,8 +1020,14 @@ namespace LineProductMes
             _model . LGN006 = string . IsNullOrEmpty ( txtLGN006 . Text ) == true ? 0 : Convert . ToDecimal ( txtLGN006 . Text );
             _model . LGN007 = txtLGN007 . Text;
 
+            _model . LGN003 = false;
+            _model . LGN004 = false;
+
             return result;
         }
+        /// <summary>
+        /// 个人工资
+        /// </summary>
         void calcuTsumTime ( )
         {
             bandedGridView1 . CloseEditor ( );

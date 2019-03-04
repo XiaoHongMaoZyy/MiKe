@@ -492,6 +492,12 @@
     <Compile Include="FormMachinePlat.Designer.cs">
       <DependentUpon>FormMachinePlat.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formme.Designer.cs">
+      <DependentUpon>Formme.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMouldInformation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -765,6 +771,9 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Formme.resx">
+      <DependentUpon>Formme.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMouldInformation.resx">
       <DependentUpon>FormMouldInformation.cs</DependentUpon>
     </EmbeddedResource>

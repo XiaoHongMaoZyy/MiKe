@@ -298,11 +298,14 @@ namespace LineProductMes
             if ( e . Error == null )
             {
                 wait . Hide ( );
+
                 if ( result )
                 {
                     XtraMessageBox . Show ( "成功保存" );
                      ClassForMain.FormClosingState.formClost = true;
+
                     controlUnEnable ( );
+
                     if ( state . Equals ( "add" ) )
                         _header . ANT001 = txtANT001 . Text = LineProductMesBll . UserInfoMation . oddNum;
                     else
@@ -339,11 +342,17 @@ namespace LineProductMes
                 row = gridView1 . GetFocusedDataRow ( );
                 if ( row == null )
                     return;
-                _bodyOne . idx = string . IsNullOrEmpty ( row [ "idx" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "idx" ] . ToString ( ) );
-                if ( _bodyOne . idx > 0 && !idxOne . Contains ( _bodyOne . idx . ToString ( ) ) )
-                    idxOne . Add ( _bodyOne . idx . ToString ( ) );
-                tableViewOne . Rows . Remove ( row );
-                gridControl1 . RefreshDataSource ( );
+                if ( XtraMessageBox . Show ( "确认删除?" ,"提示" ,MessageBoxButtons . YesNo ) == DialogResult . Yes )
+                {
+                    _bodyOne . idx = string . IsNullOrEmpty ( row [ "idx" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "idx" ] . ToString ( ) );
+                    if ( _bodyOne . idx > 0 && !idxOne . Contains ( _bodyOne . idx . ToString ( ) ) )
+                        idxOne . Add ( _bodyOne . idx . ToString ( ) );
+                    tableViewOne . Rows . Remove ( row );
+
+                    calcuSumTime ( );
+
+                    gridControl1 . RefreshDataSource ( );
+                }
             }
         }
         private void gridControl2_KeyPress ( object sender ,KeyPressEventArgs e )
@@ -353,11 +362,17 @@ namespace LineProductMes
                 row = bandedGridView1 . GetFocusedDataRow ( );
                 if ( row == null )
                     return;
-                _bodyTwo . idx = string . IsNullOrEmpty ( row [ "idx" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "idx" ] . ToString ( ) );
-                if ( _bodyTwo . idx > 0 && !idxTwo . Contains ( _bodyTwo . idx . ToString ( ) ) )
-                    idxTwo . Add ( _bodyTwo . idx . ToString ( ) );
-                tableViewTwo . Rows . Remove ( row );
-                gridControl2 . RefreshDataSource ( );
+                if ( XtraMessageBox . Show ( "确认删除?" ,"提示" ,MessageBoxButtons . YesNo ) == DialogResult . Yes )
+                {
+                    _bodyTwo . idx = string . IsNullOrEmpty ( row [ "idx" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "idx" ] . ToString ( ) );
+                    if ( _bodyTwo . idx > 0 && !idxTwo . Contains ( _bodyTwo . idx . ToString ( ) ) )
+                        idxTwo . Add ( _bodyTwo . idx . ToString ( ) );
+                    tableViewTwo . Rows . Remove ( row );
+
+                    calcuSumTime ( );
+
+                    gridControl2 . RefreshDataSource ( );
+                }
             }
         }
         private void txtANT003_EditValueChanged ( object sender ,EventArgs e )
@@ -466,7 +481,10 @@ namespace LineProductMes
                 {
                     row [ "ANV006" ] = DBNull . Value;
                 }
-                addRow ( e . Column . FieldName ,e . RowHandle ,e . Value );
+
+                calcuSumTime ( );
+
+                //addRow ( e . Column . FieldName ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "ANV013" || e . Column . FieldName == "ANV014" )
             {
@@ -478,7 +496,10 @@ namespace LineProductMes
                 {
                     row [ "ANV014" ] = DBNull . Value;
                 }
-                addRow ( e . Column . FieldName ,e . RowHandle ,e . Value );
+
+                calcuSumTime ( );
+
+                //addRow ( e . Column . FieldName ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "ANV002" || e . Column . FieldName == "ANV003" || e . Column . FieldName == "ANV004" || e . Column . FieldName == "ANV008" )
             {
@@ -520,7 +541,7 @@ namespace LineProductMes
             }
             else if ( e . Column . FieldName == "ANV007" )
             {
-                if ( row [ "ANV007" ] != null && row [ "ANV007" ] . ToString ( ) != string . Empty && ( row [ "ANV007" ] . ToString ( ) . Equals ( "离职" ) || row [ "ANV007" ] . ToString ( ) . Equals ( "未上班" ) ) )
+                if ( row [ "ANV007" ] != null && row [ "ANV007" ] . ToString ( ) != string . Empty && ( row [ "ANV007" ] . ToString ( ) . Equals ( "离职" ) || row [ "ANV007" ] . ToString ( ) . Equals ( "未上班" ) || row [ "ANV007" ] . ToString ( ) . Equals ( "请假" ) ) )
                 {
                     row [ "ANV005" ] = DBNull . Value;
                     row [ "ANV006" ] = DBNull . Value;
@@ -530,7 +551,7 @@ namespace LineProductMes
                     row [ "ANV015" ] = DBNull . Value;
                     row [ "ANV010" ] = DBNull . Value;
                 }
-                else if ( row [ "ANV007" ] . ToString ( ) . Equals ( "在职" ) || row [ "ANV007" ] . ToString ( ) . Equals ( "请假" ) )
+                else if ( row [ "ANV007" ] . ToString ( ) . Equals ( "在职" ) /*|| row [ "ANV007" ] . ToString ( ) . Equals ( "请假" )*/ )
                 {
                     if ( txtANT001 . Text . Equals ( "计时" ) )
                     {
@@ -563,41 +584,41 @@ namespace LineProductMes
             }
             else if ( e . Column . FieldName == "ANV016" )
             {
-                int selectIndex = bandedGridView1 . FocusedRowHandle;
-                if ( selectIndex < 0 )
-                    return;
+                //int selectIndex = bandedGridView1 . FocusedRowHandle;
+                //if ( selectIndex < 0 )
+                //    return;
 
-                decimal outRsult = 0;
-                string anv016Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "ANV016" ] . ToString ( );
-                if ( string . IsNullOrEmpty ( anv016Result ) )
-                    _bodyTwo . ANV016 = 0;
-                else
-                {
-                    if ( !string . IsNullOrEmpty ( anv016Result ) && decimal . TryParse ( anv016Result ,out outRsult ) == false )
-                        return;
-                    else
-                        _bodyTwo . ANV016 = outRsult;
-                }
-                for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
-                {
-                    row = tableViewTwo . Rows [ i ];
-                    if ( row [ "ANV009" ] != null && row [ "ANV009" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( row [ "ANV016" ] == null || row [ "ANV016" ] . ToString ( ) == string . Empty )
-                        {
-                            row . BeginEdit ( );
-                            row [ "ANV016" ] = _bodyTwo . ANV016;
-                            row . EndEdit ( );
-                        }
-                    }
-                    if ( i == selectIndex && ( row [ "ANV009" ] == null || row [ "ANV009" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "ANV016" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl2 . Refresh ( );
+                //decimal outRsult = 0;
+                //string anv016Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "ANV016" ] . ToString ( );
+                //if ( string . IsNullOrEmpty ( anv016Result ) )
+                //    _bodyTwo . ANV016 = 0;
+                //else
+                //{
+                //    if ( !string . IsNullOrEmpty ( anv016Result ) && decimal . TryParse ( anv016Result ,out outRsult ) == false )
+                //        return;
+                //    else
+                //        _bodyTwo . ANV016 = outRsult;
+                //}
+                //for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
+                //{
+                //    row = tableViewTwo . Rows [ i ];
+                //    if ( row [ "ANV009" ] != null && row [ "ANV009" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( row [ "ANV016" ] == null || row [ "ANV016" ] . ToString ( ) == string . Empty )
+                //        {
+                //            row . BeginEdit ( );
+                //            row [ "ANV016" ] = _bodyTwo . ANV016;
+                //            row . EndEdit ( );
+                //        }
+                //    }
+                //    if ( i == selectIndex && ( row [ "ANV009" ] == null || row [ "ANV009" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "ANV016" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl2 . Refresh ( );
                 calcuSumTime ( );
             }
         }
@@ -941,17 +962,27 @@ namespace LineProductMes
         {
             txtANT003 . ReadOnly = txtANT005 . ReadOnly = txtANT009 . ReadOnly = txtANT010 . ReadOnly = txtANT011 . ReadOnly = txtANT012 . ReadOnly = txtANT014 . ReadOnly = txtANT015 . ReadOnly =txtANT016.ReadOnly=txtANT017.ReadOnly= true;
             gridView1 . OptionsBehavior . Editable = bandedGridView1 . OptionsBehavior . Editable = false;
+            idxOne = new List<string> ( );
+            idxTwo = new List<string> ( );
         }
         void controlEnable ( )
         {
             txtANT003 . ReadOnly = txtANT005 . ReadOnly = txtANT009 . ReadOnly = txtANT010 . ReadOnly = txtANT011 . ReadOnly = txtANT012 . ReadOnly = txtANT014 . ReadOnly = txtANT015 . ReadOnly  = txtANT016 . ReadOnly = txtANT017 . ReadOnly = false;
             gridView1 . OptionsBehavior . Editable = bandedGridView1 . OptionsBehavior . Editable = true;
+
+            idxOne = new List<string> ( );
+            idxTwo = new List<string> ( );
         }
         void controlClear ( )
         {
             txtANT001 . Text = txtANT003 . Text = txtANT005 . Text = txtu0 . Text = txtu1 . Text = txtu2 . Text = txtANT009 . Text = txtANT010 . Text = txtANT011.Text=txtANT012.Text= txtANT014 . Text = txtANT015 . Text = txtANT013 . Text = txtANT016 . Text = txtANT017 . Text = string . Empty;
             gridControl1 . DataSource = null;
             gridControl2 . DataSource = null;
+
+            layoutControlItem7 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+
+            idxOne = new List<string> ( );
+            idxTwo = new List<string> ( );
         }
         void InitData ( )
         {
@@ -1005,7 +1036,8 @@ namespace LineProductMes
                 return false;
             }
 
-            
+            calcuSumTime ( );
+
             gridView1 . CloseEditor ( );
             gridView1 . UpdateCurrentRow ( );
             if ( tableViewOne == null || tableViewOne . Rows . Count < 1 )
@@ -1063,6 +1095,9 @@ namespace LineProductMes
             _header . ANT014 = Convert . ToDateTime ( txtANT014 . Text );
             _header . ANT015 = Convert . ToDateTime ( txtANT015 . Text );
 
+            _header . ANT006 = false;
+            _header . ANT007 = false;
+
             if ( ( Convert . ToDateTime ( _header . ANT015 ) - Convert . ToDateTime ( _header . ANT014 ) ) . Days > 0 )
             {
                 XtraMessageBox . Show ( "开完工时间不允许跨天" );
@@ -1076,6 +1111,17 @@ namespace LineProductMes
                 if ( row != null )
                 {
                     row . ClearErrors ( );
+
+                    if ( "计件" . Equals ( txtANT011 . Text ) )
+                    {
+                        if ( row [ "ANU007" ] == null || row [ "ANU007" ] . ToString ( ) == string . Empty || Convert . ToDecimal ( row [ "ANU007" ] ) <= 0 )
+                        {
+                            row . SetColumnError ( "ANU007" ,"必须大于0   " );
+                            result = false;
+                            break;
+                        }
+                    }
+
                     _bodyOne . ANU002 = row [ "ANU002" ] . ToString ( );
                     if ( string . IsNullOrEmpty ( _bodyOne . ANU002 ) )
                     {
@@ -1107,16 +1153,44 @@ namespace LineProductMes
             for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
             {
                 row = bandedGridView1 . GetDataRow ( i );
-                if ( row != null )
+                if ( row == null )
+                    continue;
+                row . ClearErrors ( );
+                _bodyTwo . ANV002 = row [ "ANV002" ] . ToString ( );
+                if ( string . IsNullOrEmpty ( _bodyTwo . ANV002 ) )
                 {
-                    row . ClearErrors ( );
-                    _bodyTwo . ANV002 = row [ "ANV002" ] . ToString ( );
-                    if ( string . IsNullOrEmpty ( _bodyTwo . ANV002 ) )
-                    {
-                        row . SetColumnError ( "ANV002" ,"不可为空" );
-                        result = false;
-                        break;
-                    }
+                    row . SetColumnError ( "ANV002" ,"不可为空" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . ANV003 = row [ "ANV003" ] . ToString ( );
+                _bodyTwo . ANV002 = workShopTime . checkWhetherOrNotSameDay ( txtANT014 . Text ,row [ "ANV005" ] . ToString ( ) );
+                if ( _bodyTwo . ANV002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . ANV003 + "计时开工" + _bodyTwo . ANV002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . ANV002 = workShopTime . checkWhetherOrNotSameDay ( txtANT014 . Text ,row [ "ANV006" ] . ToString ( ) );
+                if ( _bodyTwo . ANV002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . ANV003 + "计时完工" + _bodyTwo . ANV002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . ANV002 = workShopTime . checkWhetherOrNotSameDay ( txtANT014 . Text ,row [ "ANV013" ] . ToString ( ) );
+                if ( _bodyTwo . ANV002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . ANV003 + "计件开工" + _bodyTwo . ANV002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . ANV002 = workShopTime . checkWhetherOrNotSameDay ( txtANT014 . Text ,row [ "ANV014" ] . ToString ( ) );
+                if ( _bodyTwo . ANV002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . ANV003 + "计件完工" + _bodyTwo . ANV002 ,"提示" );
+                    result = false;
+                    break;
                 }
             }
             if ( result == false )
@@ -1230,6 +1304,9 @@ namespace LineProductMes
            
             //addPerson ( );
         }
+        /// <summary>
+        /// 总数量
+        /// </summary>
         void calcuSumNum ( )
         {
             if ( tableViewOne . Compute ( "SUM(ANU010)" ,null ) == DBNull.Value )
@@ -1351,6 +1428,9 @@ namespace LineProductMes
 
             bandedGridView1 . CloseEditor ( );
             bandedGridView1 . UpdateCurrentRow ( );
+
+            gridView1 . CloseEditor ( );
+            gridView1 . UpdateCurrentRow ( );
 
             calcuSumNum ( );
             calcuSumPrice ( );

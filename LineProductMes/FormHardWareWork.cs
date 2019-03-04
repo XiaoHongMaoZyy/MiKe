@@ -539,7 +539,8 @@ namespace LineProductMes
                 {
                     row [ "HAX009" ] = DBNull . Value;
                 }
-                addRows ( "HAX009" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRows ( "HAX009" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "HAX010" )
             {
@@ -547,7 +548,8 @@ namespace LineProductMes
                 {
                     row [ "HAX010" ] = DBNull . Value;
                 }
-                addRows ( "HAX010" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRows ( "HAX010" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "HAX011" )
             {
@@ -555,7 +557,8 @@ namespace LineProductMes
                 {
                     row [ "HAX011" ] = DBNull . Value;
                 }
-                addRows ( "HAX011" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRows ( "HAX011" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "HAX012" )
             {
@@ -563,44 +566,45 @@ namespace LineProductMes
                 {
                     row [ "HAX012" ] = DBNull . Value;
                 }
-                addRows ( "HAX012" ,e . RowHandle ,e . Value );
+                calcuTsumTime ( );
+                //addRows ( "HAX012" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "HAX013" )
             {
-                int selectIndex = bandedGridView1 . FocusedRowHandle;
-                if ( selectIndex < 0 )
-                    return;
+                //int selectIndex = bandedGridView1 . FocusedRowHandle;
+                //if ( selectIndex < 0 )
+                //    return;
 
-                string hax013Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "HAX013" ] . ToString ( );
-                if ( string . IsNullOrEmpty ( hax013Result ) )
-                    _body . HAX013 = 0;
-                else
-                {
-                    if ( !string . IsNullOrEmpty ( hax013Result ) && decimal . TryParse ( hax013Result ,out outRsult ) == false )
-                        return;
-                    else
-                        _body . HAX013 = outRsult;
-                }
-                for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
-                {
-                    row = tableView . Rows [ i ];
-                    if ( row [ "HAX019" ] != null && row [ "HAX019" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( row [ "HAX013" ] == null || row [ "HAX013" ] . ToString ( ) == string . Empty )
-                        {
-                            row . BeginEdit ( );
-                            row [ "HAX013" ] = _body . HAX013;
-                            row . EndEdit ( );
-                        }
-                    }
-                    if ( i == selectIndex && ( row [ "HAX019" ] == null || row [ "HAX019" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "HAX013" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl1 . Refresh ( );
+                //string hax013Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "HAX013" ] . ToString ( );
+                //if ( string . IsNullOrEmpty ( hax013Result ) )
+                //    _body . HAX013 = 0;
+                //else
+                //{
+                //    if ( !string . IsNullOrEmpty ( hax013Result ) && decimal . TryParse ( hax013Result ,out outRsult ) == false )
+                //        return;
+                //    else
+                //        _body . HAX013 = outRsult;
+                //}
+                //for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
+                //{
+                //    row = tableView . Rows [ i ];
+                //    if ( row [ "HAX019" ] != null && row [ "HAX019" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( row [ "HAX013" ] == null || row [ "HAX013" ] . ToString ( ) == string . Empty )
+                //        {
+                //            row . BeginEdit ( );
+                //            row [ "HAX013" ] = _body . HAX013;
+                //            row . EndEdit ( );
+                //        }
+                //    }
+                //    if ( i == selectIndex && ( row [ "HAX019" ] == null || row [ "HAX019" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "HAX013" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl1 . Refresh ( );
 
                 calcuTsumTime ( );
             }
@@ -699,6 +703,9 @@ namespace LineProductMes
                 if ( !idxList . Contains ( _body . idx . ToString ( ) ) )
                     idxList . Add ( _body . idx . ToString ( ) );
                 tableView . Rows . Remove ( row );
+
+                calcuTsumTime ( );
+
                 gridControl1 . RefreshDataSource ( );
             }
         }
@@ -934,11 +941,13 @@ namespace LineProductMes
         {
             txtHAW001 . ReadOnly = txtHAW002 . ReadOnly = txtHAW003 . ReadOnly = txtHAW004 . ReadOnly = txtHAW005 . ReadOnly = txtHAW006 . ReadOnly = txtHAW007 . ReadOnly = txtHAW008 . ReadOnly = txtHAW010 . ReadOnly = txtHAW011 . ReadOnly = txtHAW013 . ReadOnly = txtHAW015 . ReadOnly = txtHAW016 . ReadOnly = /*txtHAW017 . Enabled =*/ txtu0 . ReadOnly = txtHAW020.ReadOnly=txtHAW021.ReadOnly=txtHAW024.ReadOnly=txtHAW025.ReadOnly= true;
             bandedGridView1 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtHAW002 . ReadOnly =  txtHAW011 . ReadOnly = txtHAW013 . ReadOnly = txtHAW015 . ReadOnly = txtHAW016 . ReadOnly /*= txtHAW017 . ReadOnly*/ =  txtHAW020 . ReadOnly = txtHAW021 . ReadOnly = txtHAW024 . ReadOnly = txtHAW025 . ReadOnly = false;
             bandedGridView1 . OptionsBehavior . Editable = true;
+            newList ( );
         }
         void controlClear ( )
         {
@@ -946,6 +955,11 @@ namespace LineProductMes
             txtHAW001 . Text = txtHAW002 . Text = txtHAW003 . Text = txtHAW004 . Text = txtHAW005 . Text = txtHAW006 . Text = txtHAW007 . Text = txtHAW008 . Text = txtHAW009 . Text = txtHAW010 . Text = txtHAW011 . Text = txtHAW013 . Text = txtHAW015 . Text = txtHAW016 . Text = /*txtHAW017 . Text =*/ txtu0 . Text = txtHAW020 . Text = txtHAW021 . Text = txtHAW024 . Text = txtHAW025 . Text =txtHAW023.Text= string . Empty;
             gridControl1 . DataSource = null;
             layoutControlItem19 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+            newList ( );
+        }
+        void newList ( )
+        {
+            idxList = new List<string> ( );
         }
         void InitData ( )
         {
@@ -1002,6 +1016,10 @@ namespace LineProductMes
             _header . HAW006 = txtHAW006 . Text;
             _header . HAW007 = string . IsNullOrEmpty ( txtHAW007 . Text ) == true ? 0 : Convert . ToInt32 ( txtHAW007 . Text );
             _header . HAW008 = string . IsNullOrEmpty ( txtHAW008 . Text ) == true ? 0 : Convert . ToDecimal ( txtHAW008 . Text );
+
+            _header . HAW018 = false;
+            _header . HAW019 = false;
+
             //if ( string . IsNullOrEmpty ( txtHAW009 . Text ) )
             //{
             //    XtraMessageBox . Show ( "请填写完工数量" );
@@ -1050,34 +1068,91 @@ namespace LineProductMes
                 return false;
             }
 
+            calcuTsumTime ( );
+
             bandedGridView1 . CloseEditor ( );
             bandedGridView1 . UpdateCurrentRow ( );
 
             if ( tableView == null || tableView . Rows . Count < 1 )
                 return false;
 
-
-            foreach ( DataRow r in tableView.Rows )
+            DataRow row;
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
             {
-                if ( r [ "HAX015" ] == null || r [ "HAX015" ] . ToString ( ) == string . Empty )
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                row . ClearErrors ( );
+                if ( row [ "HAX015" ] == null || row [ "HAX015" ] . ToString ( ) == string . Empty )
                 {
-                    XtraMessageBox . Show ( "工作状态不可为空" );
+                    row . SetColumnError ( "HAX015" ,"工作状态不可为空   " );
                     result = false;
                     break;
                 }
-                if ( "计件" . Equals ( txtHAW011 . Text ) && ( r [ "HAX005" ] == null || r [ "HAX005" ] . ToString ( ) == string . Empty ) )
+                if ( "计件" . Equals ( txtHAW011 . Text ) && ( row [ "HAX005" ] == null || row [ "HAX005" ] . ToString ( ) == string . Empty ) )
                 {
-                    XtraMessageBox . Show ( "工序编号不可为空" );
+                    row . SetColumnError ( "HAX005", "工序编号不可为空   " );
                     result = false;
                     break;
                 }
-                if ( r [ "HAX002" ] == null || r [ "HAX002" ] . ToString ( ) == string . Empty )
+                if ( row [ "HAX002" ] == null || row [ "HAX002" ] . ToString ( ) == string . Empty )
                 {
-                    XtraMessageBox . Show ( "工号不可为空" );
+                    row . SetColumnError ( "HAX002" ,"工号不可为空   " );
+                    result = false;
+                    break;
+                }
+                _body . HAX003 = row [ "HAX003" ] . ToString ( );
+                _body . HAX002 = workShopTime . checkWhetherOrNotSameDay ( txtHAW024 . Text ,row [ "HAX009" ] . ToString ( ) );
+                if ( _body . HAX002 != null )
+                {
+                    XtraMessageBox . Show ( _body . HAX003 + "计件开工" + _body . HAX002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . HAX002 = workShopTime . checkWhetherOrNotSameDay ( txtHAW024 . Text ,row [ "HAX010" ] . ToString ( ) );
+                if ( _body . HAX002 != null )
+                {
+                    XtraMessageBox . Show ( _body . HAX003 + "计件完工" + _body . HAX002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . HAX002 = workShopTime . checkWhetherOrNotSameDay ( txtHAW024 . Text ,row [ "HAX011" ] . ToString ( ) );
+                if ( _body . HAX002 != null )
+                {
+                    XtraMessageBox . Show ( _body . HAX003 + "计时开工" + _body . HAX002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . HAX002 = workShopTime . checkWhetherOrNotSameDay ( txtHAW024 . Text ,row [ "HAX012" ] . ToString ( ) );
+                if ( _body . HAX002 != null )
+                {
+                    XtraMessageBox . Show ( _body . HAX003 + "计时完工" + _body . HAX002 ,"提示" );
                     result = false;
                     break;
                 }
             }
+
+            //foreach ( DataRow r in tableView.Rows )
+            //{
+            //    if ( r [ "HAX015" ] == null || r [ "HAX015" ] . ToString ( ) == string . Empty )
+            //    {
+            //        XtraMessageBox . Show ( "工作状态不可为空" );
+            //        result = false;
+            //        break;
+            //    }
+            //    if ( "计件" . Equals ( txtHAW011 . Text ) && ( r [ "HAX005" ] == null || r [ "HAX005" ] . ToString ( ) == string . Empty ) )
+            //    {
+            //        XtraMessageBox . Show ( "工序编号不可为空" );
+            //        result = false;
+            //        break;
+            //    }
+            //    if ( r [ "HAX002" ] == null || r [ "HAX002" ] . ToString ( ) == string . Empty )
+            //    {
+            //        XtraMessageBox . Show ( "工号不可为空" );
+            //        result = false;
+            //        break;
+            //    }
+            //}
 
             if ( result == false )
                 return false;
@@ -1305,13 +1380,12 @@ namespace LineProductMes
                     }
                 }
 
-
                 if ( result == false )
                     return false;
 
                 if ( tableArt == null || tableArt . Rows . Count < 1 )
                     return result;
-                DataRow row = tableArt . Select ( "ART010='是'" ) [ 0 ];
+                row = tableArt . Select ( "ART010='是'" ) [ 0 ];
                 if ( row != null )
                 {
                     string art011 = row [ "ART011" ] . ToString ( );
@@ -1611,6 +1685,9 @@ namespace LineProductMes
             }
             calcuTsumTime ( );
         }
+        /// <summary>
+        /// 个人工时
+        /// </summary>
         void calcuTsumTime ( )
         {
             bandedGridView1 . CloseEditor ( );

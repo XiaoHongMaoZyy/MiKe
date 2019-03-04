@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent ( )
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormLEDNewsPaper));
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
@@ -72,10 +73,20 @@
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.splitContainerControl2 = new DevExpress.XtraEditors.SplitContainerControl();
             this.gridControl2 = new DevExpress.XtraGrid.GridControl();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copy = new System.Windows.Forms.ToolStripMenuItem();
             this.gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.LEE002 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.LEE003 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE004 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE005 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE006 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE007 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE008 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.U4 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.LEE009 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.U6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.EditOrder = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
             this.View6 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.RAA001 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -86,17 +97,8 @@
             this.RAA018 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.DEA050 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.RAA008 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE003 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE004 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE005 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE006 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE007 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE008 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.U4 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.LEE009 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.U6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyOne = new System.Windows.Forms.ToolStripMenuItem();
             this.GridView1 = new DevExpress.XtraGrid.Views.BandedGrid.BandedGridView();
             this.gridBand1 = new DevExpress.XtraGrid.Views.BandedGrid.GridBand();
@@ -140,7 +142,6 @@
             this.idx = new DevExpress.XtraGrid.Views.BandedGrid.BandedGridColumn();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.wait = new DevExpress.XtraWaitForm.ProgressPanel();
-            this.btnEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
             this.splitContainerControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
@@ -187,6 +188,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EditOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.View6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -207,7 +209,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dt4.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSalary)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnEdit)).BeginInit();
             this.SuspendLayout();
             // 
             // toolExport
@@ -791,6 +792,7 @@
             this.gridControl2.TabIndex = 0;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
+            this.gridControl2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.gridControl2_KeyPress);
             // 
             // contextMenuStrip1
             // 
@@ -825,11 +827,13 @@
             this.LEE009,
             this.U6});
             this.gridView2.GridControl = this.gridControl2;
+            this.gridView2.IndicatorWidth = 35;
             this.gridView2.Name = "gridView2";
             this.gridView2.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Bottom;
             this.gridView2.OptionsView.ShowFooter = true;
             this.gridView2.OptionsView.ShowGroupPanel = false;
             this.gridView2.RowCellClick += new DevExpress.XtraGrid.Views.Grid.RowCellClickEventHandler(this.gridView2_RowCellClick);
+            this.gridView2.CustomDrawRowIndicator += new DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventHandler(this.gridView2_CustomDrawRowIndicator);
             this.gridView2.RowCellStyle += new DevExpress.XtraGrid.Views.Grid.RowCellStyleEventHandler(this.gridView2_RowCellStyle);
             this.gridView2.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gridView2_CellValueChanged);
             // 
@@ -843,105 +847,14 @@
             this.LEE002.VisibleIndex = 0;
             this.LEE002.Width = 107;
             // 
-            // EditOrder
+            // btnEdit
             // 
-            this.EditOrder.AutoHeight = false;
-            this.EditOrder.BestFitMode = DevExpress.XtraEditors.Controls.BestFitMode.BestFitResizePopup;
-            this.EditOrder.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.EditOrder.ImmediatePopup = true;
-            this.EditOrder.Name = "EditOrder";
-            this.EditOrder.NullText = "";
-            this.EditOrder.PopupFilterMode = DevExpress.XtraEditors.PopupFilterMode.Contains;
-            this.EditOrder.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
-            this.EditOrder.View = this.View6;
-            this.EditOrder.EditValueChanged += new System.EventHandler(this.EditOrder_EditValueChanged);
-            // 
-            // View6
-            // 
-            this.View6.Appearance.FocusedRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.View6.Appearance.FocusedRow.BackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.View6.Appearance.FocusedRow.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.View6.Appearance.FocusedRow.Options.UseBackColor = true;
-            this.View6.Appearance.FocusedRow.Options.UseBorderColor = true;
-            this.View6.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.RAA001,
-            this.RAA015,
-            this.DEA002,
-            this.DEA003,
-            this.DEA057,
-            this.RAA018,
-            this.DEA050,
-            this.RAA008});
-            this.View6.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            this.View6.Name = "View6";
-            this.View6.OptionsBehavior.Editable = false;
-            this.View6.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.View6.OptionsView.ShowGroupPanel = false;
-            // 
-            // RAA001
-            // 
-            this.RAA001.Caption = "来源工单";
-            this.RAA001.FieldName = "RAA001";
-            this.RAA001.Name = "RAA001";
-            this.RAA001.Visible = true;
-            this.RAA001.VisibleIndex = 0;
-            // 
-            // RAA015
-            // 
-            this.RAA015.Caption = "品号";
-            this.RAA015.FieldName = "RAA015";
-            this.RAA015.Name = "RAA015";
-            this.RAA015.Visible = true;
-            this.RAA015.VisibleIndex = 1;
-            // 
-            // DEA002
-            // 
-            this.DEA002.Caption = "品名";
-            this.DEA002.FieldName = "DEA002";
-            this.DEA002.Name = "DEA002";
-            this.DEA002.Visible = true;
-            this.DEA002.VisibleIndex = 2;
-            // 
-            // DEA003
-            // 
-            this.DEA003.Caption = "单位";
-            this.DEA003.FieldName = "DEA003";
-            this.DEA003.Name = "DEA003";
-            this.DEA003.Visible = true;
-            this.DEA003.VisibleIndex = 3;
-            // 
-            // DEA057
-            // 
-            this.DEA057.Caption = "规格";
-            this.DEA057.FieldName = "DEA057";
-            this.DEA057.Name = "DEA057";
-            this.DEA057.Visible = true;
-            this.DEA057.VisibleIndex = 4;
-            // 
-            // RAA018
-            // 
-            this.RAA018.Caption = "工单数量";
-            this.RAA018.FieldName = "RAA018";
-            this.RAA018.Name = "RAA018";
-            this.RAA018.Visible = true;
-            this.RAA018.VisibleIndex = 5;
-            // 
-            // DEA050
-            // 
-            this.DEA050.Caption = "产品单价";
-            this.DEA050.FieldName = "DEA050";
-            this.DEA050.Name = "DEA050";
-            this.DEA050.Visible = true;
-            this.DEA050.VisibleIndex = 6;
-            // 
-            // RAA008
-            // 
-            this.RAA008.Caption = "开工日期";
-            this.RAA008.FieldName = "RAA008";
-            this.RAA008.Name = "RAA008";
-            this.RAA008.Visible = true;
-            this.RAA008.VisibleIndex = 7;
+            this.btnEdit.AutoHeight = false;
+            this.btnEdit.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.btnEdit.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnEdit_ButtonClick);
             // 
             // LEE003
             // 
@@ -1042,6 +955,106 @@
             this.U6.Visible = true;
             this.U6.VisibleIndex = 7;
             this.U6.Width = 107;
+            // 
+            // EditOrder
+            // 
+            this.EditOrder.AutoHeight = false;
+            this.EditOrder.BestFitMode = DevExpress.XtraEditors.Controls.BestFitMode.BestFitResizePopup;
+            this.EditOrder.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.EditOrder.ImmediatePopup = true;
+            this.EditOrder.Name = "EditOrder";
+            this.EditOrder.NullText = "";
+            this.EditOrder.PopupFilterMode = DevExpress.XtraEditors.PopupFilterMode.Contains;
+            this.EditOrder.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
+            this.EditOrder.View = this.View6;
+            this.EditOrder.EditValueChanged += new System.EventHandler(this.EditOrder_EditValueChanged);
+            // 
+            // View6
+            // 
+            this.View6.Appearance.FocusedRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.View6.Appearance.FocusedRow.BackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.View6.Appearance.FocusedRow.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.View6.Appearance.FocusedRow.Options.UseBackColor = true;
+            this.View6.Appearance.FocusedRow.Options.UseBorderColor = true;
+            this.View6.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.RAA001,
+            this.RAA015,
+            this.DEA002,
+            this.DEA003,
+            this.DEA057,
+            this.RAA018,
+            this.DEA050,
+            this.RAA008});
+            this.View6.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            this.View6.Name = "View6";
+            this.View6.OptionsBehavior.Editable = false;
+            this.View6.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.View6.OptionsView.ShowGroupPanel = false;
+            // 
+            // RAA001
+            // 
+            this.RAA001.Caption = "来源工单";
+            this.RAA001.FieldName = "RAA001";
+            this.RAA001.Name = "RAA001";
+            this.RAA001.Visible = true;
+            this.RAA001.VisibleIndex = 0;
+            // 
+            // RAA015
+            // 
+            this.RAA015.Caption = "品号";
+            this.RAA015.FieldName = "RAA015";
+            this.RAA015.Name = "RAA015";
+            this.RAA015.Visible = true;
+            this.RAA015.VisibleIndex = 1;
+            // 
+            // DEA002
+            // 
+            this.DEA002.Caption = "品名";
+            this.DEA002.FieldName = "DEA002";
+            this.DEA002.Name = "DEA002";
+            this.DEA002.Visible = true;
+            this.DEA002.VisibleIndex = 2;
+            // 
+            // DEA003
+            // 
+            this.DEA003.Caption = "单位";
+            this.DEA003.FieldName = "DEA003";
+            this.DEA003.Name = "DEA003";
+            this.DEA003.Visible = true;
+            this.DEA003.VisibleIndex = 3;
+            // 
+            // DEA057
+            // 
+            this.DEA057.Caption = "规格";
+            this.DEA057.FieldName = "DEA057";
+            this.DEA057.Name = "DEA057";
+            this.DEA057.Visible = true;
+            this.DEA057.VisibleIndex = 4;
+            // 
+            // RAA018
+            // 
+            this.RAA018.Caption = "工单数量";
+            this.RAA018.FieldName = "RAA018";
+            this.RAA018.Name = "RAA018";
+            this.RAA018.Visible = true;
+            this.RAA018.VisibleIndex = 5;
+            // 
+            // DEA050
+            // 
+            this.DEA050.Caption = "产品单价";
+            this.DEA050.FieldName = "DEA050";
+            this.DEA050.Name = "DEA050";
+            this.DEA050.Visible = true;
+            this.DEA050.VisibleIndex = 6;
+            // 
+            // RAA008
+            // 
+            this.RAA008.Caption = "开工日期";
+            this.RAA008.FieldName = "RAA008";
+            this.RAA008.Name = "RAA008";
+            this.RAA008.Visible = true;
+            this.RAA008.VisibleIndex = 7;
             // 
             // gridControl1
             // 
@@ -1631,15 +1644,6 @@
             this.wait.TabIndex = 39;
             this.wait.Text = "progressPanel1";
             // 
-            // btnEdit
-            // 
-            this.btnEdit.AutoHeight = false;
-            this.btnEdit.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.btnEdit.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnEdit_ButtonClick);
-            // 
             // FormLEDNewsPaper
             // 
             this.Appearance.Options.UseFont = true;
@@ -1698,6 +1702,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EditOrder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.View6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
@@ -1718,7 +1723,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dt4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSalary)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnEdit)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

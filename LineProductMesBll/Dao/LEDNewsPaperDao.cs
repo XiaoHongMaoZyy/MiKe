@@ -4,6 +4,7 @@ using System . Text;
 using StudentMgr;
 using System . Data;
 using System . Data . SqlClient;
+using DevExpress . XtraEditors;
 
 namespace LineProductMesBll . Dao
 {
@@ -146,15 +147,26 @@ namespace LineProductMesBll . Dao
             parameter [ 1 ] . Value = model . LEC017;
             SQLString . Add ( strSql ,parameter );
 
+            UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
+
             if ( model . LEC017 )
             {
+                UserInfoMation . signForOdd = false;
+              
                 strSql = new StringBuilder ( );
-                strSql . AppendFormat ( "SELECT LEE002 ANN002,LEE003 ANN003,LEE004 ANN005,LEE009 ANN009,DDA001 FROM MIKLEE A LEFT JOIN TPADEA B ON A.LEE003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE LEE001 ='{0}'" ,model . LEC001 );
+                //strSql . AppendFormat ( "SELECT LEE002 ANN002,LEE003 ANN003,LEE004 ANN005,LEE009 ANN009,DDA001 FROM MIKLEE A LEFT JOIN TPADEA B ON A.LEE003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE LEE001 ='{0}'" ,model . LEC001 );
+                strSql . AppendFormat ( "SELECT A.LEE002 ANN002,A.LEE003 ANN003,LEE004 ANN005,LEE009 ANN009,DDA001,CEILING(RAB)-SUM(ISNULL(RCC006,0)) RCC  FROM MIKLEE A LEFT JOIN TPADEA B ON A.LEE003=B.DEA001  INNER JOIN TPADDA C ON B.DEA008=C.DDA001 INNER JOIN (SELECT LEE002,LEE003,MAX(CASE WHEN RAB007=0 OR RAA018=0 THEN 0 ELSE RAB008/(RAB007/RAA018) END) RAB FROM MIKLEE A INNER JOIN SGMRAA F ON A.LEE002=F.RAA001 AND A.LEE003=F.RAA015  INNER JOIN SGMRAB G ON F.RAA001=G.RAB001 WHERE LEE001='{0}' GROUP BY LEE002,LEE003) H ON A.LEE002=H.LEE002 AND A.LEE003=H.LEE003 LEFT JOIN SGMRCC E ON A.LEE001=E.RCC002 AND A.LEE002=E.RCC004 AND A.LEE003=E.RCC010  WHERE LEE001='{0}' GROUP BY A.LEE002,A.LEE003,LEE004,LEE009,DDA001,RAB,LEE001" ,model . LEC001 );
 
                 GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,model . LEC001 ,model . LEC012 );
             }
 
-            return SqlHelper . ExecuteSqlTranDic ( SQLString );
+            if ( UserInfoMation . signForStoNumGreaterthanSurNum != string . Empty )
+            {
+                XtraMessageBox . Show ( UserInfoMation . signForStoNumGreaterthanSurNum );
+                return false;
+            }
+            else
+                return SqlHelper . ExecuteSqlTranDic ( SQLString );
         }
 
         /// <summary>

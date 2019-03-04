@@ -549,117 +549,145 @@ namespace LineProductMes
             }
             if ( e . Column . FieldName == "PPA009" )
             {
-                int selectIndex = bandedGridView1 . FocusedRowHandle;
-                string ppa009Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "PPA009" ] . ToString ( );
+                //int selectIndex = bandedGridView1 . FocusedRowHandle;
+                //string ppa009Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "PPA009" ] . ToString ( );
 
-                if ( string . IsNullOrEmpty ( ppa009Result ) )
-                    _bodyTwo . PPA009 = 0;
-                else
-                    _bodyTwo . PPA009 = Convert . ToDecimal ( ppa009Result );
+                //if ( string . IsNullOrEmpty ( ppa009Result ) )
+                //    _bodyTwo . PPA009 = 0;
+                //else
+                //    _bodyTwo . PPA009 = Convert . ToDecimal ( ppa009Result );
 
-                for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
-                {
-                    row = tableViewTwo . Rows [ i ];
-                    if ( row [ "PPA013" ] != null && row [ "PPA013" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( row [ "PPA009" ] == null || row [ "PPA009" ] . ToString ( ) == string . Empty )
-                        {
-                            row . BeginEdit ( );
-                            row [ "PPA009" ] = _bodyTwo . PPA009;
-                            row . EndEdit ( );
-                        }
-                    }
-                    if ( i == selectIndex && ( row [ "PPA013" ] == null || row [ "PPA013" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "PPA009" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl2 . Refresh ( );
+                //for ( int i = selectIndex ; i < tableViewTwo . Rows . Count ; i++ )
+                //{
+                //    row = tableViewTwo . Rows [ i ];
+                //    if ( row [ "PPA013" ] != null && row [ "PPA013" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( row [ "PPA009" ] == null || row [ "PPA009" ] . ToString ( ) == string . Empty )
+                //        {
+                //            row . BeginEdit ( );
+                //            row [ "PPA009" ] = _bodyTwo . PPA009;
+                //            row . EndEdit ( );
+                //        }
+                //    }
+                //    if ( i == selectIndex && ( row [ "PPA013" ] == null || row [ "PPA013" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "PPA009" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl2 . Refresh ( );
 
                 calcuTimeSum ( );
             }
             else if ( e . Column . FieldName == "PPA005" )
             {
-                if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                if ( workShopTime . startTime ( rows ,e . Value ,"PPA006" ,"PPA007" ,"PPA008" ) == false )
                 {
-                    if ( rows [ "PPA006" ] != null && rows [ "PPA006" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA006" ] ) )
-                        {
-                            rows [ "PPA005" ] = DBNull . Value;
-                        }
-                    }
-                    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA007" ] ) )
-                        {
-                            rows [ "PPA005" ] = DBNull . Value;
-                        }
-                    }
+                    rows [ "PPA005" ] = DBNull . Value;
+                    rows [ "PPA012" ] = DBNull . Value;
+                    rows [ "PPA014" ] = DBNull . Value;
                 }
-                //calcuTimeSum ( );
-                addRow ( "PPA005" ,e . RowHandle ,e . Value );
+                //if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                //{
+                //    if ( rows [ "PPA006" ] != null && rows [ "PPA006" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA006" ] ) )
+                //        {
+                //            rows [ "PPA005" ] = DBNull . Value;
+                //        }
+                //    }
+                //    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA007" ] ) )
+                //        {
+                //            rows [ "PPA005" ] = DBNull . Value;
+                //        }
+                //    }
+                //}
+                calcuTimeSum ( );
+                //addRow ( "PPA005" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "PPA006" )
             {
-                if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                if ( workShopTime . endTime ( rows ,e . Value ,"PPA005" ,"PPA007" ,"PPA008" ) == false )
                 {
-                    if ( rows [ "PPA005" ] != null && rows [ "PPA005" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA005" ] ) )
-                        {
-                            rows [ "PPA006" ] = DBNull . Value;
-                        }
-                    }
-                    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA007" ] ) )
-                        {
-                            rows [ "PPA006" ] = DBNull . Value;
-                        }
-                    }
+                    rows [ "PPA006" ] = DBNull . Value;
+                    rows [ "PPA012" ] = DBNull . Value;
+                    rows [ "PPA014" ] = DBNull . Value;
                 }
-                //calcuTimeSum ( );
-                addRow ( "PPA006" ,e . RowHandle ,e . Value );
+
+                //if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                //{
+                //    if ( rows [ "PPA005" ] != null && rows [ "PPA005" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA005" ] ) )
+                //        {
+                //            rows [ "PPA006" ] = DBNull . Value;
+                //        }
+                //    }
+                //    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA007" ] ) )
+                //        {
+                //            rows [ "PPA006" ] = DBNull . Value;
+                //        }
+                //    }
+                //}
+                calcuTimeSum ( );
+
+                //addRow ( "PPA006" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "PPA007" )
             {
-                if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                if ( workShopTime . startCenTime ( rows ,e . Value ,"PPA006" ,"PPA008" ,"PPA005" ) == false )
                 {
-                    if ( rows [ "PPA008" ] != null && rows [ "PPA008" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA008" ] ) )
-                        {
-                            rows [ "PPA007" ] = DBNull . Value;
-                        }
-                    }
-                    if ( rows [ "PPA006" ] != null && rows [ "PPA006" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA006" ] ) )
-                        {
-                            rows [ "PPA007" ] = DBNull . Value;
-                        }
-                    }
+                    rows [ "PPA007" ] = DBNull . Value;
+                    rows [ "PPA012" ] = DBNull . Value;
+                    rows [ "PPA014" ] = DBNull . Value;
                 }
-                //calcuTimeSum ( );
-                addRow ( "PPA007" ,e . RowHandle ,e . Value );
+                //if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                //{
+                //    if ( rows [ "PPA008" ] != null && rows [ "PPA008" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) > Convert . ToDateTime ( rows [ "PPA008" ] ) )
+                //        {
+                //            rows [ "PPA007" ] = DBNull . Value;
+                //        }
+                //    }
+                //    if ( rows [ "PPA006" ] != null && rows [ "PPA006" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA006" ] ) )
+                //        {
+                //            rows [ "PPA007" ] = DBNull . Value;
+                //        }
+                //    }
+                //}
+                calcuTimeSum ( );
+
+                //addRow ( "PPA007" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "PPA008" )
             {
-                if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                if ( workShopTime . endCenTime ( rows ,e . Value ,"PPA007" ,"PPA005" ,"PPA006" ) == false )
                 {
-                    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA007" ] ) )
-                        {
-                            rows [ "PPA008" ] = DBNull . Value;
-                        }
-                    }
+                    rows [ "PPA008" ] = DBNull . Value;
+                    rows [ "PPA012" ] = DBNull . Value;
+                    rows [ "PPA014" ] = DBNull . Value;
                 }
-                //calcuTimeSum ( );
-                addRow ( "PPA008" ,e . RowHandle ,e . Value );
+
+                //if ( e . Value != null && e . Value . ToString ( ) != string . Empty )
+                //{
+                //    if ( rows [ "PPA007" ] != null && rows [ "PPA007" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( Convert . ToDateTime ( e . Value ) < Convert . ToDateTime ( rows [ "PPA007" ] ) )
+                //        {
+                //            rows [ "PPA008" ] = DBNull . Value;
+                //        }
+                //    }
+                //}
+                calcuTimeSum ( );
+                //addRow ( "PPA008" ,e . RowHandle ,e . Value );
             }
         }
         void timeEdit ( DataRow rows )
@@ -856,6 +884,9 @@ namespace LineProductMes
                 if ( _bodyOne . idx > 0 && !idxListOne . Contains ( _bodyOne . idx . ToString ( ) ) )
                     idxListOne . Add ( _bodyOne . idx . ToString ( ) );
                 tableViewOne . Rows . Remove ( row );
+
+                cricleForSale ( );
+
                 gridControl1 . Refresh ( );
             }
         }
@@ -872,6 +903,9 @@ namespace LineProductMes
                 if ( _bodyOne . idx > 0 && !idxListTwo . Contains ( _bodyTwo . idx . ToString ( ) ) )
                     idxListTwo . Add ( _bodyTwo . idx . ToString ( ) );
                 tableViewTwo . Rows . Remove ( row );
+
+                cricleForSale ( );
+
                 gridControl2 . Refresh ( );
             }
         }
@@ -986,11 +1020,13 @@ namespace LineProductMes
         {
              txtPAN003 . ReadOnly = txtPAN005 . ReadOnly = txtPAN007 . ReadOnly =txtPAN011.ReadOnly=txtPAN012.ReadOnly=txtPAN013.ReadOnly= txtPAN015 . ReadOnly = txtPAN016 . ReadOnly =txtPAN017.ReadOnly=txtPAN018.ReadOnly= true;
             bandedGridView1 . OptionsBehavior . Editable = gridView1 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtPAN003 . ReadOnly = txtPAN005 . ReadOnly = txtPAN007 . ReadOnly = txtPAN011 . ReadOnly = txtPAN012 . ReadOnly = txtPAN013 . ReadOnly = txtPAN015 . ReadOnly = txtPAN016 . ReadOnly = txtPAN017 . ReadOnly = txtPAN018 . ReadOnly = false;
             bandedGridView1 . OptionsBehavior . Editable = gridView1 . OptionsBehavior . Editable = true;
+            newList ( );
         }
         void controlClear ( )
         {
@@ -998,6 +1034,12 @@ namespace LineProductMes
             gridControl1 . DataSource = gridControl2 . DataSource = null;
             layoutControlItem11 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
             wait . Hide ( );
+            newList ( );
+        }
+        void newList ( )
+        {
+            idxListOne = new List<string> ( );
+            idxListTwo = new List<string> ( );
         }
         void ThreadPost ( )
         {
@@ -1091,6 +1133,18 @@ namespace LineProductMes
 
             gridView1 . CloseEditor ( );
             gridView1 . UpdateCurrentRow ( );
+
+            bandedGridView1 . CloseEditor ( );
+            bandedGridView1 . UpdateCurrentRow ( );
+
+            cricleForSale ( );
+
+            gridView1 . CloseEditor ( );
+            gridView1 . UpdateCurrentRow ( );
+
+            bandedGridView1 . CloseEditor ( );
+            bandedGridView1 . UpdateCurrentRow ( );
+
             if ( txtPAN013 . Text . Equals ( "计件" ) )
             {
                 if ( tableViewOne == null || tableViewOne . Rows . Count < 1 )
@@ -1112,6 +1166,8 @@ namespace LineProductMes
                 row = gridView1 . GetDataRow ( i );
                 if ( row == null )
                     continue;
+                row . ClearErrors ( );
+
                 if ( txtPAN013 . Text . Equals ( "计件" ) )
                 {
                     if ( row [ "PAO002" ] == null || row [ "PAO002" ] . ToString ( ) == string . Empty )
@@ -1129,6 +1185,12 @@ namespace LineProductMes
                     if ( row [ "PAO012" ] == null || row [ "PAO012" ] . ToString ( ) == string . Empty )
                     {
                         row . SetColumnError ( "PAO012" ,"不可为空" );
+                        result = false;
+                        break;
+                    }
+                    if ( row [ "PAO006" ] == null || row [ "PAO006" ] . ToString ( ) == string . Empty || Convert.ToDecimal( row [ "PAO006" ] ) <=0 )
+                    {
+                        row . SetColumnError ( "PAO006" ,"必须大于0   " );
                         result = false;
                         break;
                     }
@@ -1153,15 +1215,57 @@ namespace LineProductMes
                 return false;
 
             bandedGridView1 . ClearColumnErrors ( );
-            foreach ( DataRow row in tableViewTwo . Rows )
+            for ( int i = 0 ; i < bandedGridView1 . RowCount ; i++ )
             {
+                row = bandedGridView1 . GetDataRow ( i );
+                if ( row == null )
+                    continue;
+                row . ClearErrors ( );
                 if ( row [ "PPA002" ] == null || row [ "PPA002" ] . ToString ( ) == string . Empty )
                 {
-                    bandedGridView1 . SetColumnError ( PPA002 ,"不可为空" );
+                    row . SetColumnError ( "PPA002" ,"不可为空    " );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . PPA003 = row [ "PPA003" ] . ToString ( );
+                _bodyTwo . PPA002 = workShopTime . checkWhetherOrNotSameDay ( txtPAN015 . Text ,row [ "PPA005" ] . ToString ( ) );
+                if ( _bodyTwo . PPA002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . PPA003 + "计件开工" + _bodyTwo . PPA002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . PPA002 = workShopTime . checkWhetherOrNotSameDay ( txtPAN015 . Text ,row [ "PPA006" ] . ToString ( ) );
+                if ( _bodyTwo . PPA002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . PPA003 + "计件完工" + _bodyTwo . PPA002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . PPA002 = workShopTime . checkWhetherOrNotSameDay ( txtPAN015 . Text ,row [ "PPA007" ] . ToString ( ) );
+                if ( _bodyTwo . PPA002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . PPA003 + "计时开工" + _bodyTwo . PPA002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _bodyTwo . PPA002 = workShopTime . checkWhetherOrNotSameDay ( txtPAN015 . Text ,row [ "PPA008" ] . ToString ( ) );
+                if ( _bodyTwo . PPA002 != null )
+                {
+                    XtraMessageBox . Show ( _bodyTwo . PPA003 + "计时完工" + _bodyTwo . PPA002 ,"提示" );
                     result = false;
                     break;
                 }
             }
+            //foreach ( DataRow row in tableViewTwo . Rows )
+            //{
+            //    if ( row [ "PPA002" ] == null || row [ "PPA002" ] . ToString ( ) == string . Empty )
+            //    {
+            //        bandedGridView1 . SetColumnError ( PPA002 ,"不可为空" );
+            //        result = false;
+            //        break;
+            //    }
+            //}
 
             if ( result == false )
                 return false;
@@ -1257,6 +1361,9 @@ namespace LineProductMes
 
             return result;
         }
+        /// <summary>
+        /// 计件工资
+        /// </summary>
         void calcuSalaryNumSum ( )
         {
             gridView1 . CloseEditor ( );
@@ -1267,6 +1374,9 @@ namespace LineProductMes
             else
                 txtu0 . Text = 0 . ToString ( );
         }
+        /// <summary>
+        /// 总工资
+        /// </summary>
         void calcuSalarySum ( )
         {
             txtu2 . Text = ( ( string . IsNullOrEmpty ( txtu0 . Text ) == true ? 0 : Convert . ToDecimal ( txtu0 . Text ) ) + ( string . IsNullOrEmpty ( txtu1 . Text ) == true ? 0 : Convert . ToDecimal ( txtu1 . Text ) ) ) . ToString ( "0.##" );
@@ -1284,6 +1394,9 @@ namespace LineProductMes
             }
             txtu2 . Text = ( string . IsNullOrEmpty ( txtu2 . Text ) == true ? 0 : Convert . ToDecimal ( txtu2 . Text ) + ( string . IsNullOrEmpty ( txtPAN017 . Text ) == true ? 0 : Convert . ToDecimal ( txtPAN017 . Text ) * ( string . IsNullOrEmpty ( txtPAN018 . Text ) == true ? 0 : Convert . ToDecimal ( txtPAN018 . Text ) ) ) ) . ToString ( "0.######" );
         }
+        /// <summary>
+        /// 计时工资
+        /// </summary>
         void calcuSalaryTimeSum ( )
         {
             bandedGridView1 . CloseEditor ( );
@@ -1370,6 +1483,7 @@ namespace LineProductMes
 
             }
 
+            //总工时
             //txtu3 . Text = U4 . SummaryItem . SummaryValue == null ? 0 . ToString ( ) : Convert . ToDecimal ( U4 . SummaryItem . SummaryValue ) . ToString ( "0.#" );
             txtu3 . Text = u0 . ToString ( "0.######" );
            calcuSalaaryEveryWork ( );
@@ -1826,6 +1940,14 @@ namespace LineProductMes
                 }
             }
             return result;
+        }
+        /// <summary>
+        /// 工资流程
+        /// </summary>
+        void cricleForSale ( )
+        {
+            calcuSalarySum ( );
+            calcuTimeSum ( );
         }
         #endregion
 

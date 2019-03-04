@@ -31,7 +31,7 @@ namespace LineProductMes
             ToolBarContain . ToolbarsC ( barTool ,new DevExpress . XtraBars . BarItem [ ] { toolCanecl ,toolSave ,toolPrint ,toolCancellation ,toolExamin ,toolDelete ,toolEdit ,toolAdd } );
 
             _bll = new LineProductMesBll . Bll . SalaryByEveryOneBll ( );
-            toolExport . Visibility = DevExpress . XtraBars . BarItemVisibility . Always;
+           
         }
 
         protected override int Query ( )
@@ -74,6 +74,11 @@ namespace LineProductMes
                 if ( e . CellValue != null && e . CellValue != DBNull . Value && Convert . ToDecimal ( e . CellValue ) > 250 )
                     e . Appearance . BackColor = Color . Red;
             }
+        }
+
+        private void FormSalaryByEveryOne_Load ( object sender ,EventArgs e )
+        {
+            toolExport . Visibility = DevExpress . XtraBars . BarItemVisibility . Always;
         }
     }
 }

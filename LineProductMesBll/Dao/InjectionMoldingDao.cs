@@ -6,6 +6,7 @@ using System . Threading . Tasks;
 using StudentMgr;
 using System . Data;
 using System . Data . SqlClient;
+using DevExpress . XtraEditors;
 
 namespace LineProductMesBll . Dao
 {
@@ -95,18 +96,31 @@ namespace LineProductMesBll . Dao
             parameter [ 1 ] . Value = model . IJA010;
             SQLString . Add ( strSql ,parameter );
 
+            UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
+
             if ( model . IJA010 )
             {
+                UserInfoMation . signForOdd = false;
+
                 strSql = new StringBuilder ( );
+                
                 if ( model . IJA002 . Equals ( "计件" ) )
-                    strSql . AppendFormat ( "SELECT IJB004 ANN002,IJB005 ANN003,IJB007 ANN005,IJB015 ANN009,DDA001 FROM MIKIJB A LEFT JOIN TPADEA B ON A.IJB005=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE IJB001='{0}'" ,model . IJA001 );
+                    //strSql . AppendFormat ( "SELECT IJB004 ANN002,IJB005 ANN003,IJB007 ANN005,IJB015 ANN009,DDA001 FROM MIKIJB A LEFT JOIN TPADEA B ON A.IJB005=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE IJB001='{0}'" ,model . IJA001 );
+                    strSql . AppendFormat ( "SELECT A.IJB004 ANN002,A.IJB005 ANN003,IJB007 ANN005,IJB015 ANN009,DDA001,CEILING(RAB)-SUM(ISNULL(RCC006,0)) RCC FROM MIKIJB A LEFT JOIN TPADEA B ON A.IJB005=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 INNER JOIN (SELECT IJB004,IJB005,MAX(CASE WHEN RAB007=0 OR RAA018=0 THEN 0 ELSE RAB008/(RAB007/RAA018) END) RAB FROM MIKIJB A INNER JOIN SGMRAA F ON A.IJB004=F.RAA001 AND A.IJB005=F.RAA015 INNER JOIN SGMRAB G ON F.RAA001=G.RAB001  WHERE IJB001='{0}' GROUP BY IJB004,IJB005) H ON A.IJB004=H.IJB004 AND A.IJB005=H.IJB005 LEFT JOIN SGMRCC E ON A.IJB001=E.RCC002 AND A.IJB004=E.RCC004 AND A.IJB005=E.RCC010 WHERE IJB001='{0}' GROUP BY A.IJB004,A.IJB005,IJB007,IJB015,DDA001,RAB,IJB001" ,model . IJA001 );
                 else if ( model . IJA002 . Equals ( "计时" ) )
-                    strSql . AppendFormat ( "SELECT IJC002 ANN002,IJC003 ANN003,IJC005 ANN005,IJC010 ANN009,DDA001 FROM MIKIJC A LEFT JOIN TPADEA B ON A.IJC003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE IJC001='{0}'" ,model . IJA001 );
+                    //strSql . AppendFormat ( "SELECT IJC002 ANN002,IJC003 ANN003,IJC005 ANN005,IJC010 ANN009,DDA001 FROM MIKIJC A LEFT JOIN TPADEA B ON A.IJC003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE IJC001='{0}'" ,model . IJA001 );
+                    strSql . AppendFormat ( "SELECT A.IJC002 ANN002,A.IJC003 ANN003,IJC005 ANN005,IJC010 ANN009,DDA001,CEILING(RAB)-SUM(ISNULL(RCC006,0)) RCC FROM MIKIJC A LEFT JOIN TPADEA B ON A.IJC003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 INNER JOIN (SELECT IJC002,IJC003,MAX(CASE WHEN RAB007=0 OR RAA018=0 THEN 0 ELSE RAB008/(RAB007/RAA018) END) RAB FROM MIKIJC A INNER JOIN SGMRAA F ON A.IJC002=F.RAA001 AND A.IJC003=F.RAA015 INNER JOIN SGMRAB G ON F.RAA001=G.RAB001  WHERE IJC001='{0}' GROUP BY IJC002,IJC003) H ON A.IJC002=H.IJC002 AND A.IJC003=H.IJC003 LEFT JOIN SGMRCC E ON A.IJC001=E.RCC002 AND A.IJC002=E.RCC004 AND A.IJC003=E.RCC010 WHERE IJC001='{0}' GROUP BY A.IJC002,A.IJC003,IJC005,IJC010,DDA001,RAB,IJC001" ,model . IJA001 );
 
                 GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,model . IJA001 ,model . IJA005 );
             }
 
-            return SqlHelper . ExecuteSqlTranDic ( SQLString );
+            if ( UserInfoMation . signForStoNumGreaterthanSurNum != string . Empty )
+            {
+                XtraMessageBox . Show ( UserInfoMation . signForStoNumGreaterthanSurNum );
+                return false;
+            }
+            else
+                return SqlHelper . ExecuteSqlTranDic ( SQLString );
         }
 
         /// <summary>

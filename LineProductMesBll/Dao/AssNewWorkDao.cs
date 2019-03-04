@@ -4,6 +4,7 @@ using System . Data;
 using System . Text;
 using StudentMgr;
 using System . Data . SqlClient;
+using DevExpress . XtraEditors;
 
 namespace LineProductMesBll . Dao
 {
@@ -800,13 +801,23 @@ namespace LineProductMesBll . Dao
 
             if ( result )
             {
+                UserInfoMation . signForOdd = false;
+                UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
+
                 strSql = new StringBuilder ( );
-                strSql . AppendFormat ( "SELECT ANN002,ANN003,ANN005,ANN009,DDA001 FROM MIKANN A LEFT JOIN TPADEA C ON A.ANN003=C.DEA001 INNER JOIN TPADDA D ON C.DEA008=D.DDA001 WHERE ANN001='{0}'" ,oddNum );
+                //strSql . AppendFormat ( "SELECT ANN002,ANN003,ANN005,ANN009,DDA001 FROM MIKANN A LEFT JOIN TPADEA C ON A.ANN003=C.DEA001 INNER JOIN TPADDA D ON C.DEA008=D.DDA001 WHERE ANN001='{0}'" ,oddNum );
+                strSql . AppendFormat ( "SELECT ANN001,A.ANN002,A.ANN003,ANN005,ANN009,DDA001,CEILING(RAB)-SUM(ISNULL(RCC006,0)) RCC FROM MIKANN A LEFT JOIN TPADEA C ON A.ANN003=C.DEA001  INNER JOIN TPADDA D ON C.DEA008=D.DDA001 INNER JOIN (SELECT ANN002,ANN003,MAX(CASE WHEN RAB007=0 OR RAA018=0 THEN 0 ELSE RAB008/(RAB007/RAA018) END) RAB FROM MIKANN A INNER JOIN SGMRAA F ON A.ANN002=F.RAA001 AND A.ANN003=F.RAA015 INNER JOIN SGMRAB G ON F.RAA001=G.RAB001 WHERE ANN001='{0}'  GROUP BY ANN002,ANN003) H ON A.ANN002=H.ANN002 AND A.ANN003=H.ANN003 LEFT JOIN SGMRCC E ON A.ANN001=E.RCC002 AND A.ANN002=E.RCC004 AND A.ANN003=E.RCC010  WHERE ANN001='{0}' GROUP BY A.ANN002,A.ANN003,ANN005,ANN009,DDA001,RAB,ANN001" ,oddNum );
 
                 GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,oddNum ,department );
             }
 
-            return SqlHelper . ExecuteSqlTranDic ( SQLString );
+            if ( UserInfoMation . signForStoNumGreaterthanSurNum !=string.Empty )
+            {
+                XtraMessageBox . Show ( UserInfoMation . signForStoNumGreaterthanSurNum );
+                return false;
+            }
+            else
+                return SqlHelper . ExecuteSqlTranDic ( SQLString );
         }
 
         /// <summary>

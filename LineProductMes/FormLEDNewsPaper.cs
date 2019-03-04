@@ -295,6 +295,13 @@ namespace LineProductMes
                 e . Info . DisplayText = ( e . RowHandle + 1 ) . ToString ( );
             }
         }
+        private void gridView2_CustomDrawRowIndicator ( object sender ,DevExpress . XtraGrid . Views . Grid . RowIndicatorCustomDrawEventArgs e )
+        {
+            if ( e . Info . IsRowIndicator && e . RowHandle >= 0 )
+            {
+                e . Info . DisplayText = ( e . RowHandle + 1 ) . ToString ( );
+            }
+        }
         private void txtLEC010_EditValueChanged ( object sender ,EventArgs e )
         {
             if ( txtLEC010 . EditValue == null || txtLEC010 . EditValue . ToString ( ) == string . Empty )
@@ -437,7 +444,9 @@ namespace LineProductMes
                 {
                     row [ "LED005" ] = DBNull . Value;
                 }
-                addRow ( "LED005" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                calcuSalaryTimeSum ( );
+                //addRow ( "LED005" ,e . RowHandle ,e . Value );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LED006" )
             {
@@ -445,7 +454,9 @@ namespace LineProductMes
                 {
                     row [ "LED006" ] = DBNull . Value;
                 }
-                addRow ( "LED006" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                calcuSalaryTimeSum ( );
+                //addRow ( "LED006" ,e . RowHandle ,e . Value );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LED008" )
             {
@@ -453,7 +464,8 @@ namespace LineProductMes
                 {
                     row [ "LED008" ] = DBNull . Value;
                 }
-                addRow ( "LED008" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LED008" ,e . RowHandle ,e . Value );
                 calcuSalaryTimeSum ( );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LED009" )
@@ -462,40 +474,41 @@ namespace LineProductMes
                 {
                     row [ "LED009" ] = DBNull . Value;
                 }
-                addRow ( "LED009" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LED009" ,e . RowHandle ,e . Value );
                 calcuSalaryTimeSum ( );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LED010" )
             {
                 //led015
-                int selectIndex = GridView1 . FocusedRowHandle;
-                string led010Result = GridView1 . GetDataRow ( selectIndex ) [ "LED010" ] . ToString ( );
+                //int selectIndex = GridView1 . FocusedRowHandle;
+                //string led010Result = GridView1 . GetDataRow ( selectIndex ) [ "LED010" ] . ToString ( );
 
-                if ( string . IsNullOrEmpty ( led010Result ) )
-                    _body . LED010 = 0;
-                else
-                    _body . LED010 = Convert . ToDecimal ( led010Result );
+                //if ( string . IsNullOrEmpty ( led010Result ) )
+                //    _body . LED010 = 0;
+                //else
+                //    _body . LED010 = Convert . ToDecimal ( led010Result );
 
-                for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
-                {
-                    row = tableView . Rows [ i ];
-                    if ( row [ "LED015" ] != null && row [ "LED015" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( row [ "LED010" ] == null || row [ "LED010" ] . ToString ( ) == string . Empty )
-                        {
-                            row . BeginEdit ( );
-                            row [ "LED010" ] = _body . LED010;
-                            row . EndEdit ( );
-                        }
-                    }
-                    if ( i == selectIndex && ( row [ "LED015" ] == null || row [ "LED015" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "LED010" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl1 . Refresh ( );
+                //for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
+                //{
+                //    row = tableView . Rows [ i ];
+                //    if ( row [ "LED015" ] != null && row [ "LED015" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( row [ "LED010" ] == null || row [ "LED010" ] . ToString ( ) == string . Empty )
+                //        {
+                //            row . BeginEdit ( );
+                //            row [ "LED010" ] = _body . LED010;
+                //            row . EndEdit ( );
+                //        }
+                //    }
+                //    if ( i == selectIndex && ( row [ "LED015" ] == null || row [ "LED015" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "LED010" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl1 . Refresh ( );
 
 
                 calcuSalaryTimeSum ( );
@@ -544,7 +557,7 @@ namespace LineProductMes
         }
         private void gridControl1_KeyPress ( object sender ,System . Windows . Forms . KeyPressEventArgs e )
         {
-            row = GridView1 . GetFocusedDataRow ( );
+            DataRow row = GridView1 . GetFocusedDataRow ( );
             if ( row == null )
                 return;
             if ( e . KeyChar == ( char ) Keys . Enter && toolSave . Visibility == DevExpress . XtraBars . BarItemVisibility . Always )
@@ -555,7 +568,31 @@ namespace LineProductMes
                     if ( _body . idx > 0 && !idxList . Contains ( _body . idx . ToString ( ) ) )
                         idxList . Add ( _body . idx . ToString ( ) );
                     tableView . Rows . Remove ( row );
+
+                    cicrlForSale ( );
+
                     gridControl1 . RefreshDataSource ( );
+                }
+            }
+        }
+        private void gridControl2_KeyPress ( object sender ,KeyPressEventArgs e )
+        {
+            DataRow row = gridView2 . GetFocusedDataRow ( );
+            if ( row == null )
+                return;
+            if ( e . KeyChar == ( char ) Keys . Enter && toolSave . Visibility == DevExpress . XtraBars . BarItemVisibility . Always )
+            {
+                if ( XtraMessageBox . Show ( "确认删除?" ,"删除" ,MessageBoxButtons . YesNo ) == DialogResult . Yes )
+                {
+                    _bodyOne . idx = string . IsNullOrEmpty ( row [ "idx" ] . ToString ( ) ) == true ? 0 : Convert . ToInt32 ( row [ "idx" ] . ToString ( ) );
+                    if ( _bodyOne . idx > 0 && !idxListOne . Contains ( _bodyOne . idx . ToString ( ) ) )
+                        idxListOne . Add ( _bodyOne . idx . ToString ( ) );
+
+                    tableViewOne . Rows . Remove ( row );
+
+                    cicrlForSale ( );
+
+                    gridControl2 . RefreshDataSource ( );
                 }
             }
         }
@@ -797,12 +834,14 @@ namespace LineProductMes
             txtLEC010 . ReadOnly = txtLEC012 . ReadOnly = txtLEC015 . ReadOnly = txtLEC019 . ReadOnly = txtLEC020 . ReadOnly = txtLEC021 . ReadOnly = txtLEC023 . ReadOnly = txtLEC024 . ReadOnly = true;
             GridView1 . OptionsBehavior . Editable = false;
             gridView2 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtLEC010 . ReadOnly = txtLEC012 . ReadOnly = txtLEC015 . ReadOnly = txtLEC019 . ReadOnly = txtLEC020 . ReadOnly = txtLEC021 . ReadOnly = txtLEC023 . ReadOnly = txtLEC024 . ReadOnly = false;
             GridView1 . OptionsBehavior . Editable = true;
             gridView2 . OptionsBehavior . Editable = true;
+            newList ( );
         }
         void controlClear ( )
         {
@@ -811,6 +850,12 @@ namespace LineProductMes
             txtLEC001 . Text = txtLEC010 . Text = txtLEC012 . Text = txtLEC013 . Text = txtLEC015 . Text = txtLEC019 . Text = txtLEC020 . Text = txtLEC021 . Text = txtu1 . Text = txtu2 . Text = txtu3 . Text = txtu4 . Text = txtu5 . Text = txtLEC023 . Text = txtLEC024 . Text = string . Empty;
             txtLEC001 . Text = txtLEC010 . Text = txtLEC012 . Text = txtLEC013 . Text =  txtLEC015 . Text = txtLEC019 . Text = txtLEC020 . Text = txtLEC021 . Text = txtu1 . Text = txtu2 . Text = txtu3 . Text = txtu4 . Text = txtu5 . Text = txtLEC023 . Text = txtLEC024 . Text = string . Empty;
             layoutControlItem21 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+            newList ( );
+        }
+        void newList ( )
+        {
+            idxList = new List<string> ( );
+            idxListOne = new List<string> ( );
         }
         void ThreadPost ( )
         {
@@ -898,13 +943,24 @@ namespace LineProductMes
             GridView1 . CloseEditor ( );
             GridView1 . UpdateCurrentRow ( );
 
+            gridView2 . CloseEditor ( );
+            gridView2 . UpdateCurrentRow ( );
+
+            cicrlForSale ( );
+
+            GridView1 . CloseEditor ( );
+            GridView1 . UpdateCurrentRow ( );
+
+            gridView2 . CloseEditor ( );
+            gridView2 . UpdateCurrentRow ( );
+
             if ( tableView == null || tableView . Rows . Count < 1 )
             {
                 XtraMessageBox . Show ( "请选择人员等信息" );
                 return false;
             }
 
-            for ( int i=0 ;i<GridView1.RowCount ;i++ )
+            for ( int i = 0 ; i < GridView1 . RowCount ; i++ )
             {
                 row = GridView1 . GetDataRow ( i );
                 if ( row == null )
@@ -925,6 +981,35 @@ namespace LineProductMes
                 if ( row [ "LED004" ] == null || row [ "LED004" ] . ToString ( ) == string . Empty )
                 {
                     row . SetColumnError ( "LED004" ,"不可为空" );
+                    result = false;
+                    break;
+                }
+                _body . LED003 = row [ "LED003" ] . ToString ( );
+                _body . LED002 = workShopTime . checkWhetherOrNotSameDay ( txtLEC023 . Text ,row [ "LED005" ] . ToString ( ) );
+                if ( _body . LED002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LED003 + "计件开工" + _body . LED002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LED002 = workShopTime . checkWhetherOrNotSameDay ( txtLEC023 . Text ,row [ "LED006" ] . ToString ( ) );
+                if ( _body . LED002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LED003 + "计件完工" + _body . LED002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LED002 = workShopTime . checkWhetherOrNotSameDay ( txtLEC023 . Text ,row [ "LED008" ] . ToString ( ) );
+                if ( _body . LED002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LED003 + "计时开工" + _body . LED002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LED002 = workShopTime . checkWhetherOrNotSameDay ( txtLEC023 . Text ,row [ "LED009" ] . ToString ( ) );
+                if ( _body . LED002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LED003 + "计时完工" + _body . LED002 ,"提示" );
                     result = false;
                     break;
                 }
@@ -985,6 +1070,15 @@ namespace LineProductMes
                     continue;
                 row . ClearErrors ( );
 
+                if ( "计件" . Equals ( txtLEC021 . Text ) )
+                {
+                    if ( row [ "LEE008" ] == null || row [ "LEE008" ] . ToString ( ) == string . Empty || Convert . ToDecimal ( row [ "LEE008" ] ) <= 0 )
+                    {
+                        row . SetColumnError ( "LEE008" ,"必须大于0   " );
+                        result = false;
+                        break;
+                    }
+                }
                 if ( row [ "LEE002" ] == null || row [ "LEE002" ] . ToString ( ) == string . Empty )
                 {
                     row . SetColumnError ( "LEE002" ,"请选择" );
@@ -1092,6 +1186,9 @@ namespace LineProductMes
 
             return result;
         }
+        /// <summary>
+        /// 总工时
+        /// </summary>
         void calcuTimeSum ( )
         {
             GridView1 . CloseEditor ( );
@@ -1165,6 +1262,9 @@ namespace LineProductMes
             }
             txtu1 . Text = ( LED014 . SummaryItem . SummaryValue == null ? 0 : Math . Round ( Convert . ToDecimal ( LED014 . SummaryItem . SummaryValue ) ,1 ,MidpointRounding . AwayFromZero ) + ( LED015 . SummaryItem . SummaryValue == null ? 0 : Math . Round ( Convert . ToDecimal ( LED015 . SummaryItem . SummaryValue ) ,1 ,MidpointRounding . AwayFromZero ) ) ) . ToString ( "0.#" );
         }
+        /// <summary>
+        /// 计件工资
+        /// </summary>
         void calcuSalaryTimeSum ( )
         {
             decimal? salaryTimeSum = 0;
@@ -1182,6 +1282,9 @@ namespace LineProductMes
             }
             txtu2 . Text = Convert . ToDecimal ( salaryTimeSum ) . ToString ( "0.###" );
         }
+        /// <summary>
+        /// 补贴工资
+        /// </summary>
         void calcuSalaryTieSum ( )
         {
             decimal? salaryTimeSum = 0;
@@ -1204,10 +1307,16 @@ namespace LineProductMes
             }
             txtu4 . Text = Convert . ToDecimal ( salaryTimeSum ) . ToString ( "0.###" );
         }
+        /// <summary>
+        /// 总工资
+        /// </summary>
         void calcuSalarySum ( )
         {
             txtu5 . Text = ( (string . IsNullOrEmpty ( txtu2 . Text ) == true ? 0 : Convert . ToDecimal ( txtu2 . Text )) + ( string . IsNullOrEmpty ( txtu3 . Text ) == true ? 0 : Convert . ToDecimal ( txtu3 . Text ) ) - ( string . IsNullOrEmpty ( txtu4 . Text ) == true ? 0 : Convert . ToDecimal ( txtu4 . Text ) ) ) . ToString ( );
         }
+        /// <summary>
+        /// 个人工资
+        /// </summary>
         void calcuSalaryUser ( )
         {
             decimal salarySum = string . IsNullOrEmpty ( txtu5 . Text ) == true ? 0 : Convert . ToDecimal ( txtu5 . Text );
@@ -1255,6 +1364,9 @@ namespace LineProductMes
             tablePrintFiv = _bll . getPrintFiv ( txtLEC001 . Text );
             tablePrintFiv . TableName = "TableTre";
         }
+        /// <summary>
+        /// 计时工资
+        /// </summary>
         void calcuSalaryByPrice ( )
         {
             gridView2 . CloseEditor ( );
@@ -1435,6 +1547,15 @@ namespace LineProductMes
                 }
             }
             return result;
+        }
+        void cicrlForSale ( )
+        {
+            calcuTimeSum ( );
+            calcuSalaryTimeSum ( );
+            calcuSalaryByPrice ( );
+            calcuSalarySum ( );
+            calcuSalaryTieSum ( );
+            calcuSalaryUser ( );
         }
         #endregion
 

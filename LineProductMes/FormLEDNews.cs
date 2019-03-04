@@ -414,7 +414,7 @@ namespace LineProductMes
                 return;
             if ( GridView1 . FocusedColumn . FieldName == "LEG012" )
             {
-                if ( e . Value . Equals ( "离职" ) || e . Value . Equals ( "未上班" ) )
+                if ( e . Value . Equals ( "离职" ) || e . Value . Equals ( "未上班" ) || e . Value . Equals ( "请假" ) )
                 {
                     row [ "LEG005" ] = DBNull . Value;
                     row [ "LEG006" ] = DBNull . Value;
@@ -425,7 +425,7 @@ namespace LineProductMes
                     row [ "LEG014" ] = DBNull . Value;
                     row [ "LEG015" ] = DBNull . Value;
                 }
-                else if ( e . Value . Equals ( "在职" ) || e . Value . Equals ( "请假" ) )
+                else if ( e . Value . Equals ( "在职" ) /*|| e . Value . Equals ( "请假" )*/ )
                 {
                     if ( row [ "LEG005" ] == null || row [ "LEG005" ] . ToString ( ) == string . Empty )
                     {
@@ -448,7 +448,8 @@ namespace LineProductMes
                 {
                     row [ "LEG005" ] = DBNull . Value;
                 }
-                addRow ( "LEG005" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LEG005" ,e . RowHandle ,e . Value );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LEG006" )
             {
@@ -456,7 +457,8 @@ namespace LineProductMes
                 {
                     row [ "LEG006" ] = DBNull . Value;
                 }
-                addRow ( "LEG006" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LEG006" ,e . RowHandle ,e . Value );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LEG008" )
             {
@@ -464,7 +466,8 @@ namespace LineProductMes
                 {
                     row [ "LEG008" ] = DBNull . Value;
                 }
-                addRow ( "LEG008" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LEG008" ,e . RowHandle ,e . Value );
                 calcuSalaryTimeSum ( );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LEG009" )
@@ -473,40 +476,41 @@ namespace LineProductMes
                 {
                     row [ "LEG009" ] = DBNull . Value;
                 }
-                addRow ( "LEG009" ,e . RowHandle ,e . Value );
+                calcuTimeSum ( );
+                //addRow ( "LEG009" ,e . RowHandle ,e . Value );
                 calcuSalaryTimeSum ( );
             }
             else if ( GridView1 . FocusedColumn . FieldName == "LEG010" )
             {
                 //leg015
 
-                int selectIndex = GridView1 . FocusedRowHandle;
-                string leg010Result = GridView1 . GetDataRow ( selectIndex ) [ "LEG010" ] . ToString ( );
-                if ( string . IsNullOrEmpty ( leg010Result ) )
-                    _body . LEG010 = 0;
-                else
-                    _body . LEG010 = Convert . ToDecimal ( leg010Result );
+                //int selectIndex = GridView1 . FocusedRowHandle;
+                //string leg010Result = GridView1 . GetDataRow ( selectIndex ) [ "LEG010" ] . ToString ( );
+                //if ( string . IsNullOrEmpty ( leg010Result ) )
+                //    _body . LEG010 = 0;
+                //else
+                //    _body . LEG010 = Convert . ToDecimal ( leg010Result );
 
-                for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
-                {
-                    row = tableView . Rows [ i ];
-                    if ( row [ "LEG015" ] != null && row [ "LEG015" ] . ToString ( ) != string . Empty )
-                    {
-                        if ( row [ "LEG010" ] == null || row [ "LEG010" ] . ToString ( ) == string . Empty )
-                        {
-                            row . BeginEdit ( );
-                            row [ "LEG010" ] = _body . LEG010;
-                            row . EndEdit ( );
-                        }
-                    }
-                    if ( i == selectIndex && ( row [ "LEG015" ] == null || row [ "LEG015" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "LEG010" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl1 . Refresh ( );
+                //for ( int i = selectIndex ; i < tableView . Rows . Count ; i++ )
+                //{
+                //    row = tableView . Rows [ i ];
+                //    if ( row [ "LEG015" ] != null && row [ "LEG015" ] . ToString ( ) != string . Empty )
+                //    {
+                //        if ( row [ "LEG010" ] == null || row [ "LEG010" ] . ToString ( ) == string . Empty )
+                //        {
+                //            row . BeginEdit ( );
+                //            row [ "LEG010" ] = _body . LEG010;
+                //            row . EndEdit ( );
+                //        }
+                //    }
+                //    if ( i == selectIndex && ( row [ "LEG015" ] == null || row [ "LEG015" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "LEG010" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl1 . Refresh ( );
 
                 calcuSalaryTimeSum ( );
             }
@@ -564,6 +568,9 @@ namespace LineProductMes
                     if ( _body . idx > 0 && !idxList . Contains ( _body . idx . ToString ( ) ) )
                         idxList . Add ( _body . idx . ToString ( ) );
                     tableView . Rows . Remove ( row );
+
+                    cicrlForSal ( );
+
                     gridControl1 . RefreshDataSource ( );
                 }
             }
@@ -581,6 +588,9 @@ namespace LineProductMes
                     if ( _bodyOne . idx > 0 && !idxListOne . Contains ( _bodyOne . idx . ToString ( ) ) )
                         idxListOne . Add ( _bodyOne . idx . ToString ( ) );
                     tableViewTwo . Rows . Remove ( row );
+
+                    cicrlForSal ( );
+
                     gridControl2 . RefreshDataSource ( );
                 }
             }
@@ -865,12 +875,14 @@ namespace LineProductMes
             txtLEF010 . ReadOnly = txtLEF012 . ReadOnly = txtLEF015 . ReadOnly =  txtLEF019 . ReadOnly = txtLEF020 . ReadOnly =txtLEF021.ReadOnly= txtLEF023 . ReadOnly = txtLEF024 . ReadOnly =txtLEF025.ReadOnly=txtLEF026.ReadOnly=txtLEF027.ReadOnly= true;
             GridView1 . OptionsBehavior . Editable = false;
             gridView2 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtLEF010 . ReadOnly = txtLEF012 . ReadOnly =  txtLEF015 . ReadOnly = txtLEF019 . ReadOnly = txtLEF020 . ReadOnly = txtLEF021 . ReadOnly = txtLEF023 . ReadOnly = txtLEF024 . ReadOnly = txtLEF025 . ReadOnly = txtLEF026 . ReadOnly = txtLEF027 . ReadOnly = false;
             GridView1 . OptionsBehavior . Editable = true;
             gridView2 . OptionsBehavior . Editable = true;
+            newList ( );
         }
         void controlClear ( )
         {
@@ -879,6 +891,12 @@ namespace LineProductMes
             txtLEF001 . Text = txtLEF010 . Text = txtLEF012 . Text = txtLEF013 . Text = txtLEF015 . Text =   txtu1 . Text = txtu2 . Text = txtu3 . Text = txtu4 . Text = txtu5 . Text =txtLEF019.Text=txtLEF020.Text=txtLEF021.Text = txtLEF023 . Text = txtLEF024 . Text = txtLEF025 . Text = txtLEF026 . Text = txtLEF027 . Text = txtLEF022.Text= string . Empty;
             txtLEF001 . Text = txtLEF010 . Text = txtLEF012 . Text = txtLEF013 . Text = txtLEF015 . Text =  txtu1 . Text = txtu2 . Text = txtu3 . Text = txtu4 . Text = txtu5 . Text = txtLEF019 . Text = txtLEF020 . Text = txtLEF021 . Text = txtLEF023 . Text = txtLEF024 . Text = txtLEF025 . Text = txtLEF026 . Text = txtLEF027 . Text = txtLEF022.Text= string . Empty;
             layoutControlItem21 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+            newList ( );
+        }
+        void newList ( )
+        {
+            idxList = new List<string> ( );
+            idxListOne = new List<string> ( );
         }
         void ThreadPost ( )
         {
@@ -977,6 +995,18 @@ namespace LineProductMes
             GridView1 . CloseEditor ( );
             GridView1 . UpdateCurrentRow ( );
 
+            gridView2 . CloseEditor ( );
+            gridView2 . UpdateCurrentRow ( );
+
+            cicrlForSal ( );
+
+
+            GridView1 . CloseEditor ( );
+            GridView1 . UpdateCurrentRow ( );
+
+            gridView2 . CloseEditor ( );
+            gridView2 . UpdateCurrentRow ( );
+
             if ( tableView == null || tableView . Rows . Count < 1 )
                 return false;
 
@@ -1002,6 +1032,35 @@ namespace LineProductMes
                 if ( row [ "LEG004" ] == null || row [ "LEG004" ] . ToString ( ) == string . Empty )
                 {
                     row . SetColumnError ( "LEG004" ,"不可为空" );
+                    result = false;
+                    break;
+                }
+                _body . LEG003 = row [ "LEG003" ] . ToString ( );
+                _body . LEG002 = workShopTime . checkWhetherOrNotSameDay ( txtLEF023 . Text ,row [ "LEG005" ] . ToString ( ) );
+                if ( _body . LEG002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LEG003 + "计件开工" + _body . LEG002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LEG002 = workShopTime . checkWhetherOrNotSameDay ( txtLEF023 . Text ,row [ "LEG006" ] . ToString ( ) );
+                if ( _body . LEG002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LEG003 + "计件完工" + _body . LEG002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LEG002 = workShopTime . checkWhetherOrNotSameDay ( txtLEF023 . Text ,row [ "LEG008" ] . ToString ( ) );
+                if ( _body . LEG002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LEG003 + "计时开工" + _body . LEG002 ,"提示" );
+                    result = false;
+                    break;
+                }
+                _body . LEG002 = workShopTime . checkWhetherOrNotSameDay ( txtLEF023 . Text ,row [ "LEG009" ] . ToString ( ) );
+                if ( _body . LEG002 != null )
+                {
+                    XtraMessageBox . Show ( _body . LEG003 + "计时完工" + _body . LEG002 ,"提示" );
                     result = false;
                     break;
                 }
@@ -1062,25 +1121,35 @@ namespace LineProductMes
                     continue;
                 row . ClearErrors ( );
 
-                    if ( row [ "LEH002" ] == null || row [ "LEH002" ] . ToString ( ) == string . Empty )
+                if ( "计件" . Equals ( txtLEF021 . Text ) )
+                {
+                    if ( row [ "LEH008" ] == null || row [ "LEH008" ] . ToString ( ) == string . Empty || Convert . ToDecimal ( row [ "LEH008" ] ) <= 0 )
                     {
-                        row . SetColumnError ( "LEH002" ,"请选择" );
+                        row . SetColumnError ( "LEH008" ,"必须大于0   " );
                         result = false;
                         break;
                     }
-                    if ( row [ "LEH003" ] == null || row [ "LEH003" ] . ToString ( ) == string . Empty )
-                    {
-                        row . SetColumnError ( "LEH003" ,"请选择" );
-                        result = false;
-                        break;
-                    }
-                    if ( row [ "LEH009" ] == null || row [ "LEH009" ] . ToString ( ) == string . Empty )
-                    {
-                        row . SetColumnError ( "LEH009" ,"请录入" );
-                        result = false;
-                        break;
-                    }
-                
+                }
+
+                if ( row [ "LEH002" ] == null || row [ "LEH002" ] . ToString ( ) == string . Empty )
+                {
+                    row . SetColumnError ( "LEH002" ,"请选择" );
+                    result = false;
+                    break;
+                }
+                if ( row [ "LEH003" ] == null || row [ "LEH003" ] . ToString ( ) == string . Empty )
+                {
+                    row . SetColumnError ( "LEH003" ,"请选择" );
+                    result = false;
+                    break;
+                }
+                if ( row [ "LEH009" ] == null || row [ "LEH009" ] . ToString ( ) == string . Empty )
+                {
+                    row . SetColumnError ( "LEH009" ,"请录入" );
+                    result = false;
+                    break;
+                }
+
                 if ( row [ "LEH009" ] != null && row [ "LEH009" ] . ToString ( ) != string . Empty && row [ "U4" ] != null && row [ "U4" ] . ToString ( ) != string . Empty && Convert . ToInt32 ( row [ "LEH009" ] ) > Convert . ToInt32 ( row [ "U4" ] ) )
                 {
                     row . SetColumnError ( "LEH009" ,"完工数量多于未完工数量" );
@@ -1181,6 +1250,8 @@ namespace LineProductMes
             _header . LEF021 = txtLEF021 . Text;
             _header . LEF025 = string . IsNullOrEmpty ( txtLEF025 . Text ) == true ? 0 : Convert . ToDecimal ( txtLEF025 . Text );
 
+            _header . LEF017 = false;
+            _header . LEF018 = false;
 
             if ( _header .LEF026 > 0 && _header . LEF027 > 0 && string . IsNullOrEmpty ( _header . LEF015 ) )
             {
@@ -1276,9 +1347,13 @@ namespace LineProductMes
 
             }
 
+            //总工时
             txtu1 . Text = u1 . ToString ( "0.#" ); /*( LEG014 . SummaryItem . SummaryValue == null ? 0 : Math . Round ( Convert . ToDecimal ( LEG014 . SummaryItem . SummaryValue ) ,1 ,MidpointRounding . AwayFromZero ) + ( LEG015 . SummaryItem . SummaryValue == null ? 0 : Math . Round ( Convert . ToDecimal ( LEG015 . SummaryItem . SummaryValue ) ,1 ,MidpointRounding . AwayFromZero ) ) ) . ToString ( "0.#" );*/
             calcuSalaryUser ( totalFP );
         }
+        /// <summary>
+        /// 计时工资
+        /// </summary>
         void calcuSalaryTimeSum ( )
         {
             decimal? salaryTimeSum = 0;
@@ -1303,6 +1378,9 @@ namespace LineProductMes
             }
             txtu2 . Text = Convert . ToDecimal ( salaryTimeSum ) . ToString ( "0.#" );
         }
+        /// <summary>
+        /// 补贴工资
+        /// </summary>
         void calcuSalaryTieSum ( )
         {
             decimal? salaryTimeSum = 0;
@@ -1404,6 +1482,9 @@ namespace LineProductMes
             tablePrintFiv = _bll . getPrintFiv ( txtLEF001 . Text );
             tablePrintFiv . TableName = "TableTre";
         }
+        /// <summary>
+        /// 计件工资
+        /// </summary>
         void calcuSalaryByPrice ( )
         {
             gridView2 . CloseEditor ( );
@@ -1584,6 +1665,17 @@ namespace LineProductMes
                 }
             }
             return result;
+        }
+        /// <summary>
+        /// 工资计算流程
+        /// </summary>
+        void cicrlForSal ( )
+        {
+            calcuSalaryTimeSum ( );
+            calcuSalaryByPrice ( );
+            calcuSalarySum ( );
+            calcuSalaryTieSum ( );
+            calcuTimeSum ( );
         }
         #endregion
 

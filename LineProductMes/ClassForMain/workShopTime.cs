@@ -837,5 +837,24 @@ namespace LineProductMes . ClassForMain
             return true;
         }
 
+        /// <summary>
+        /// 检查是否是同一天  
+        /// </summary>
+        /// <param name="dtOne">开工日期</param>
+        /// <param name="dtTwo">报工日期</param>
+        /// <returns></returns>
+        public static string checkWhetherOrNotSameDay ( string dtOne,string dtTwo )
+        {
+            if ( !string . IsNullOrEmpty ( dtOne ) && !string . IsNullOrEmpty ( dtTwo ) )
+            {
+                if ( Convert . ToDateTime ( dtOne ) . Date != Convert . ToDateTime ( dtTwo ) . Date )
+                    return "时间与开工日期不是同一天,不允许保存";
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+
     }
 }

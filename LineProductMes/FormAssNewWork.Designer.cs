@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent ( )
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAssNewWork));
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
@@ -93,6 +94,7 @@
             this.U1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ANN009 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ANN010 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.idx_one = new DevExpress.XtraGrid.Columns.GridColumn();
             this.EditView = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
             this.ViewInfo = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.RAA0011 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -104,7 +106,7 @@
             this.RAA0181 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.RAA0081 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copy = new System.Windows.Forms.ToolStripMenuItem();
             this.bandedGridView1 = new DevExpress.XtraGrid.Views.BandedGrid.BandedGridView();
             this.gridBand1 = new DevExpress.XtraGrid.Views.BandedGrid.GridBand();
@@ -949,6 +951,7 @@
             this.gridControl2.TabIndex = 0;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            this.gridControl2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.gridControl2_KeyPress);
             // 
             // gridView1
             // 
@@ -963,12 +966,14 @@
             this.U0,
             this.U1,
             this.ANN009,
-            this.ANN010});
+            this.ANN010,
+            this.idx_one});
             this.gridView1.GridControl = this.gridControl2;
             this.gridView1.IndicatorWidth = 35;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsView.NewItemRowPosition = DevExpress.XtraGrid.Views.Grid.NewItemRowPosition.Bottom;
             this.gridView1.OptionsView.ShowGroupPanel = false;
+            this.gridView1.CustomDrawRowIndicator += new DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventHandler(this.gridView1_CustomDrawRowIndicator);
             this.gridView1.RowCellStyle += new DevExpress.XtraGrid.Views.Grid.RowCellStyleEventHandler(this.gridView1_RowCellStyle);
             this.gridView1.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gridView1_CellValueChanged);
             // 
@@ -1082,6 +1087,12 @@
             this.ANN010.Name = "ANN010";
             this.ANN010.Visible = true;
             this.ANN010.VisibleIndex = 10;
+            // 
+            // idx_one
+            // 
+            this.idx_one.Caption = "编号";
+            this.idx_one.FieldName = "idx";
+            this.idx_one.Name = "idx_one";
             // 
             // EditView
             // 
@@ -1986,5 +1997,6 @@
         private DevExpress . XtraGrid . Views . BandedGrid . GridBand gridBand4;
         private DevExpress . XtraGrid . Views . BandedGrid . BandedGridColumn ANX018;
         private DevExpress . XtraGrid . Views . BandedGrid . GridBand gridBand5;
+        private DevExpress . XtraGrid . Columns . GridColumn idx_one;
     }
 }

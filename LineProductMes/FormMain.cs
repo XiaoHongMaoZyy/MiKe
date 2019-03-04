@@ -303,6 +303,7 @@ namespace LineProductMes
             reportCon . roundButton1 . Click += RoundButton1_Click5;
             reportCon . button2 . Click += btnWages_Click;
             reportCon . button1 . Click += btnEvery_Click;
+            reportCon . button3 . Click += btnRatio_Click;
             findAllBtn ( reportCon );
         }
         private void RoundButton1_Click5 ( object sender ,EventArgs e )
@@ -651,6 +652,12 @@ namespace LineProductMes
         private void btnEvery_Click ( object sender ,EventArgs e )
         {
             idPro = proId = "FormSalaryByEveryOne";
+            openTheForm ( proId ,idPro );
+        }
+        //入库明细对比表
+        private void btnRatio_Click ( object sender ,EventArgs e )
+        {
+            idPro = proId = "Formme";
             openTheForm ( proId ,idPro );
         }
         #endregion

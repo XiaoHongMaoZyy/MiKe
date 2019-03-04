@@ -7,6 +7,7 @@ using System . Threading . Tasks;
 using StudentMgr;
 using System . Data . SqlClient;
 using System . Collections;
+using DevExpress . XtraEditors;
 
 namespace LineProductMesBll . Dao
 {
@@ -562,7 +563,7 @@ namespace LineProductMesBll . Dao
         public bool Exanmie ( int numbers ,LineProductMesEntityu . HardWareWorkHeaderEntity _header )
         {
             Dictionary<Object ,Object> SQLString = new Dictionary<Object ,Object> ( );
-
+            
             StringBuilder strSql = new StringBuilder ( );
             strSql . Append ( "UPDATE MIKHAW SET HAW018=@HAW018 WHERE HAW001=@HAW001" );
             SqlParameter [ ] parameter = {
@@ -575,15 +576,21 @@ namespace LineProductMesBll . Dao
 
             if ( _header . HAW018 )
             {
-                if ( string . IsNullOrEmpty ( _header . HAW022 ) && numbers!=0 )
+                if ( string . IsNullOrEmpty ( _header . HAW022 ) && numbers != 0 )
                     addSGM ( SQLString ,numbers ,_header );
+
+                UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
 
                 if ( _header . HAW009 > 0 )
                 {
-                    strSql = new StringBuilder ( );
-                    strSql . AppendFormat ( "SELECT HAW002 ANN002,HAW003 ANN003,HAW005 ANN005,HAW009 ANN009,DDA001 FROM MIKHAW A LEFT JOIN TPADEA B ON A.HAW003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE HAW001='{0}'" ,_header . HAW001 );
+                    UserInfoMation . signForOdd = true;
 
-                    GenerateSGMRCACB . GenerateSGM ( SQLString ,strSql ,_header . HAW001 ,_header . HAW014 );
+                    strSql = new StringBuilder ( );
+                    //strSql . AppendFormat ( "SELECT HAW002 ANN002,HAW003 ANN003,HAW005 ANN005,HAW009 ANN009,DDA001 FROM MIKHAW A LEFT JOIN TPADEA B ON A.HAW003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001 WHERE HAW001='{0}'" ,_header . HAW001 );
+                    strSql . AppendFormat ( "SELECT A.HAW002 ANN002,A.HAW003 ANN003,HAW005 ANN005,HAW009 ANN009,DDA001,CEILING(RAB)-SUM(ISNULL(RCC006,0)) RCC FROM MIKHAW A LEFT JOIN TPADEA B ON A.HAW003=B.DEA001 INNER JOIN TPADDA C ON B.DEA008=C.DDA001  INNER JOIN (SELECT HAW002,HAW003,MAX(CASE WHEN RAB007=0 OR RAA018=0 THEN 0 ELSE RAB008/(RAB007/RAA018) END) RAB FROM MIKHAW A INNER JOIN SGMRAA F ON A.HAW002=F.RAA001 AND A.HAW003=F.RAA015 INNER JOIN SGMRAB G ON F.RAA001=G.RAB001  WHERE HAW001='{0}' GROUP BY HAW002,HAW003) H ON A.HAW002=H.HAW002 AND A.HAW003=H.HAW003  LEFT JOIN SGMRCC E ON A.HAW001=E.RCC002 AND A.HAW002=E.RCC004 AND A.HAW003=E.RCC010 WHERE HAW001='{0}' GROUP BY A.HAW002,A.HAW003,HAW005,HAW009,DDA001,RAB,HAW001" ,_header . HAW001 );
+
+                    //工单单身子件、根据BOM算耗用量：单位用量*报工数量
+                    GenerateSGMRCACB . GenerateSGMS ( SQLString ,strSql ,_header . HAW001 ,_header . HAW014 );
                 }
             }
             else
@@ -602,7 +609,13 @@ namespace LineProductMesBll . Dao
                 }
             }
 
-            return SqlHelper . ExecuteSqlTranDic ( SQLString );
+            if ( UserInfoMation . signForStoNumGreaterthanSurNum != string . Empty )
+            {
+                XtraMessageBox . Show ( UserInfoMation . signForStoNumGreaterthanSurNum );
+                return false;
+            }
+            else
+                return SqlHelper . ExecuteSqlTranDic ( SQLString );
         }
 
         /// <summary>

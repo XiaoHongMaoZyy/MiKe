@@ -16,7 +16,8 @@ namespace LineProductMes
 
             this . FormClosing += FormChild_FormClosing1;
 
-            //Power ( );
+            //if ( this . DesignMode == false )
+                Power ( );
         }
 
         private void FormChild_FormClosing1 ( object sender ,FormClosingEventArgs e )

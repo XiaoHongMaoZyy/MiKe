@@ -25,6 +25,7 @@ namespace LineProductMes
         LineProductMesEntityu.InjectionMoldingBodyTreEntity _bodyTre=null;
 
         DataTable tableViewOne,tableViewTwo,tableViewTre,tableProduce,tableUser,tableProduct,tablePer,tablePrintOne,tablePrintTwo,tableOtherSur,tablePrintTre,tablePrintFor,tablePrintFiv,tablrPrintSix;
+
         List<string> idxOne=new List<string>();
         List<string> idxTwo=new List<string>();
         List<string> idxTre=new List<string>();
@@ -565,12 +566,12 @@ namespace LineProductMes
                     row [ "IJB016" ] = DBNull . Value;
                 }
 
-               
-
                 if ( workShopTime . startTimeZS ( row [ "IJB002" ] ,tableViewOne ) == false )
                     row [ "IJB016" ] = DBNull . Value;
 
-                addRow ( "IJB016" ,e . RowHandle );
+                calcuSumTime ( );
+
+               // addRow ( "IJB016" ,e . RowHandle );
             }
             else if ( e . Column . FieldName == "IJB017" )
             {
@@ -582,7 +583,9 @@ namespace LineProductMes
                 if ( workShopTime . startTimeZS ( row [ "IJB002" ] ,tableViewOne ) == false )
                     row [ "IJB017" ] = DBNull . Value;
 
-                addRow ( "IJB017" ,e . RowHandle );
+                calcuSumTime ( );
+
+                //   addRow ( "IJB017" ,e . RowHandle );
             }
             else if ( e . Column . FieldName == "IJB018" )
             {
@@ -594,7 +597,9 @@ namespace LineProductMes
                 if ( workShopTime . startTimeZS ( row [ "IJB002" ] ,tableViewOne ) == false )
                     row [ "IJB018" ] = DBNull . Value;
 
-                addRow ( "IJB018" ,e . RowHandle );
+                calcuSumTime ( );
+
+                //   addRow ( "IJB018" ,e . RowHandle );
             }
             else if ( e . Column . FieldName == "IJB019" )
             {
@@ -606,39 +611,41 @@ namespace LineProductMes
                 if ( workShopTime . startTimeZS ( row [ "IJB002" ] ,tableViewOne ) == false )
                     row [ "IJB019" ] = DBNull . Value;
 
-                addRow ( "IJB019" ,e . RowHandle );
+                calcuSumTime ( );
+
+                // addRow ( "IJB019" ,e . RowHandle );
             }
             else if ( e . Column . FieldName == "IJB020" )
             {
-                int selectIndex = bandedGridView1 . FocusedRowHandle;
-                string ijb020Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "IJB020" ] . ToString ( );
-                if ( string . IsNullOrEmpty ( ijb020Result ) )
-                    _bodyOne . IJB020 = 0;
-                else
-                {
-                    if ( !string . IsNullOrEmpty ( ijb020Result ) && decimal . TryParse ( ijb020Result ,out outRsult ) == false )
-                        return;
-                    else
-                        _bodyOne . IJB020 = outRsult;
-                }
+                //int selectIndex = bandedGridView1 . FocusedRowHandle;
+                //string ijb020Result = bandedGridView1 . GetDataRow ( selectIndex ) [ "IJB020" ] . ToString ( );
+                //if ( string . IsNullOrEmpty ( ijb020Result ) )
+                //    _bodyOne . IJB020 = 0;
+                //else
+                //{
+                //    if ( !string . IsNullOrEmpty ( ijb020Result ) && decimal . TryParse ( ijb020Result ,out outRsult ) == false )
+                //        return;
+                //    else
+                //        _bodyOne . IJB020 = outRsult;
+                //}
 
-                for ( int i = selectIndex ; i < tableViewOne . Rows . Count ; i++ )
-                {
-                    row = tableViewOne . Rows [ i ];
-                    if ( row [ "IJB023" ] != null && row [ "IJB023" ] . ToString ( ) != string . Empty )
-                    {
-                        row . BeginEdit ( );
-                        row [ "IJB020" ] = _bodyOne . IJB020;
-                        row . EndEdit ( );
-                    }
-                    if ( i == selectIndex && ( row [ "IJB023" ] == null || row [ "IJB023" ] . ToString ( ) == string . Empty ) )
-                    {
-                        row . BeginEdit ( );
-                        row [ "IJB020" ] = DBNull . Value;
-                        row . EndEdit ( );
-                    }
-                }
-                gridControl1 . Refresh ( );
+                //for ( int i = selectIndex ; i < tableViewOne . Rows . Count ; i++ )
+                //{
+                //    row = tableViewOne . Rows [ i ];
+                //    if ( row [ "IJB023" ] != null && row [ "IJB023" ] . ToString ( ) != string . Empty )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "IJB020" ] = _bodyOne . IJB020;
+                //        row . EndEdit ( );
+                //    }
+                //    if ( i == selectIndex && ( row [ "IJB023" ] == null || row [ "IJB023" ] . ToString ( ) == string . Empty ) )
+                //    {
+                //        row . BeginEdit ( );
+                //        row [ "IJB020" ] = DBNull . Value;
+                //        row . EndEdit ( );
+                //    }
+                //}
+                //gridControl1 . Refresh ( );
                 calcuSumTime ( );
             }
             //else if ( e . Column . FieldName == "IJB012" /*|| e . Column . FieldName == "IJB013"*/ )
@@ -693,7 +700,9 @@ namespace LineProductMes
                         }
                     }
                 }
-                addRowTime ( "IJD006" ,e . RowHandle ,e . Value );
+                calcuSumTime ( );
+
+                //addRowTime ( "IJD006" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "IJD007" )
             {
@@ -707,7 +716,9 @@ namespace LineProductMes
                         }
                     }
                 }
-                addRowTime ( "IJD007" ,e . RowHandle ,e . Value );
+
+                calcuSumTime ( );
+                //addRowTime ( "IJD007" ,e . RowHandle ,e . Value );
             }
             else if ( e . Column . FieldName == "IJD008" )
             {
@@ -800,6 +811,9 @@ namespace LineProductMes
                     if ( _bodyOne . idx > 0 && !idxOne . Contains ( _bodyOne . idx . ToString ( ) ) )
                         idxOne . Add ( _bodyOne . idx . ToString ( ) );
                     tableViewOne . Rows . Remove ( row );
+
+                    calcuSumTime ( );
+
                     gridControl1 . Refresh ( );
                 }
             }
@@ -817,6 +831,9 @@ namespace LineProductMes
                     if ( _bodyTwo . idx > 0 && !idxTwo . Contains ( _bodyTwo . idx . ToString ( ) ) )
                         idxTwo . Add ( _bodyTwo . idx . ToString ( ) );
                     tableViewTwo . Rows . Remove ( row );
+
+                    calcuSumTime ( );
+
                     gridControl2 . Refresh ( );
                 }
             }
@@ -834,6 +851,9 @@ namespace LineProductMes
                     if ( _bodyTre . idx > 0 && !idxTre . Contains ( _bodyTre . idx . ToString ( ) ) )
                         idxTre . Add ( _bodyTre . idx . ToString ( ) );
                     tableViewTre . Rows . Remove ( row );
+
+                    calcuSumTime ( );
+
                     gridControl3 . Refresh ( );
                 }
             }
@@ -1188,23 +1208,32 @@ namespace LineProductMes
             }
         }
         #endregion
-
+        
         #region Method
         void controlUnEnable ( )
         {
             txtIJA002 . ReadOnly = txtIJA004 . ReadOnly = txtIJA006 . ReadOnly = txtIJA008 . ReadOnly = txtIJA012 . ReadOnly = txtIJA013 . ReadOnly = txtIJA015 . ReadOnly = txtIJA016 . ReadOnly = txtIJA017 . ReadOnly = true;
             bandedGridView1 . OptionsBehavior . Editable = gridView2 . OptionsBehavior . Editable = gridView4 . OptionsBehavior . Editable = false;
+            newList ( );
         }
         void controlEnable ( )
         {
             txtIJA002 . ReadOnly = txtIJA004 . ReadOnly = txtIJA006 . ReadOnly = txtIJA008 . ReadOnly = txtIJA012 . ReadOnly = txtIJA013 . ReadOnly = txtIJA015 . ReadOnly = txtIJA016 . ReadOnly = txtIJA017 . ReadOnly = false;
             bandedGridView1 . OptionsBehavior . Editable = gridView2 . OptionsBehavior . Editable = gridView4 . OptionsBehavior . Editable = true;
+            newList ( );
         }
         void controlClear ( )
         {
             txtIJA001 . Text = txtIJA002 . Text = txtIJA004 . Text = txtIJA006 . Text = txtIJA007 . Text = txtIJA008 . Text = txtIJA012 . Text = txtIJA013 . Text = txtIJA015 . Text = txtIJA016 . Text = txtIJA017 . Text =txtIJA014.Text= string . Empty;
             gridControl1 . DataSource = gridControl2 . DataSource = gridControl3 . DataSource = null;
             layoutControlItem8 . Visibility = DevExpress . XtraLayout . Utils . LayoutVisibility . Never;
+            newList ( );
+        }
+        void newList ( )
+        {
+            idxOne = new List<string> ( );
+            idxTwo = new List<string> ( );
+            idxTre = new List<string> ( );
         }
         void InitData ( )
         {
@@ -1293,6 +1322,7 @@ namespace LineProductMes
                 return false;
             }
 
+            calcuSumTime ( );
 
             if ( txtIJA002 . Text . Equals ( "计件" ) )
             {
@@ -1309,6 +1339,7 @@ namespace LineProductMes
                     row = bandedGridView1 . GetDataRow ( i );
                     if ( row == null )
                         continue;
+                    row . ClearErrors ( );
                     _bodyOne . IJB002 = row [ "IJB002" ] . ToString ( );
                     if ( _bodyOne . IJB002 == string . Empty )
                     {
@@ -1333,6 +1364,13 @@ namespace LineProductMes
                     if ( row [ "IJB015" ] == null || row [ "IJB015" ] . ToString ( ) == string . Empty )
                     {
                         row . SetColumnError ( "IJB015" ,"不可为空" );
+                        result = false;
+                        break;
+                    }
+                    _bodyOne . IJB011 = string . IsNullOrEmpty ( row [ "IJB011" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "IJB011" ] );
+                    if ( _bodyOne . IJB011 <=0 )
+                    {
+                        row . SetColumnError ( "IJB011" ,"必须大于0  " );
                         result = false;
                         break;
                     }
@@ -1560,6 +1598,9 @@ namespace LineProductMes
             _header . IJA015 = Convert . ToDateTime ( txtIJA015 . Text );
             _header . IJA016 = Convert . ToDateTime ( txtIJA016 . Text );
             _header . IJA017 = txtIJA017 . Text;
+
+            _header . IJA010 = false;
+            _header . IJA011 = false;
 
             return result;
         }

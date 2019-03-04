@@ -25,6 +25,15 @@ namespace LineProductMesBll . Bll
         {
             return dal . getTableView ( dt );
         }
+        /// <summary>
+        /// 入库明细对比表
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public DataTable getInventoryView ( string dt )
+        {
+            return dal . getInventoryView ( dt );
+        }
 
 
     }

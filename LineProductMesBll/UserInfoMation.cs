@@ -76,5 +76,15 @@ namespace LineProductMesBll
         /// </summary>
         public static string DataBase=ObtainInfo.getDataBase();
 
+        /// <summary>
+        /// 是否是五金报工单
+        /// </summary>
+        public static bool signForOdd=false;
+
+        /// <summary>
+        /// 入库数量是否大于工单的剩余数量
+        /// </summary>
+        public static string signForStoNumGreaterthanSurNum=string.Empty;
+        
     }
 }

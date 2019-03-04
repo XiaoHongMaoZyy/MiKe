@@ -49,17 +49,17 @@
             this.ANX = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ANW020 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
-            this.dtTime = new DevExpress.XtraEditors.DateEdit();
             this.yearOrMonth = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.dtTime = new DevExpress.XtraEditors.DateEdit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDateEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDateEdit1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
             this.splitContainerControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // toolExport
@@ -83,7 +83,7 @@
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemDateEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1145, 331);
+            this.gridControl1.Size = new System.Drawing.Size(1145, 322);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -297,30 +297,17 @@
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.Horizontal = false;
-            this.splitContainerControl1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainerControl1.Location = new System.Drawing.Point(0, 26);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.yearOrMonth);
             this.splitContainerControl1.Panel1.Controls.Add(this.dtTime);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.gridControl1);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1145, 374);
+            this.splitContainerControl1.Size = new System.Drawing.Size(1145, 372);
             this.splitContainerControl1.SplitterPosition = 38;
             this.splitContainerControl1.TabIndex = 5;
             this.splitContainerControl1.Text = "splitContainerControl1";
-            // 
-            // dtTime
-            // 
-            this.dtTime.EditValue = null;
-            this.dtTime.Location = new System.Drawing.Point(147, 13);
-            this.dtTime.MenuManager = this.barManager1;
-            this.dtTime.Name = "dtTime";
-            this.dtTime.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dtTime.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dtTime.Size = new System.Drawing.Size(149, 20);
-            this.dtTime.TabIndex = 1;
             // 
             // yearOrMonth
             // 
@@ -337,6 +324,19 @@
             this.yearOrMonth.Size = new System.Drawing.Size(100, 20);
             this.yearOrMonth.TabIndex = 2;
             // 
+            // dtTime
+            // 
+            this.dtTime.EditValue = null;
+            this.dtTime.Location = new System.Drawing.Point(147, 13);
+            this.dtTime.MenuManager = this.barManager1;
+            this.dtTime.Name = "dtTime";
+            this.dtTime.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dtTime.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dtTime.Size = new System.Drawing.Size(149, 20);
+            this.dtTime.TabIndex = 1;
+            // 
             // FormSalaryByEveryOne
             // 
             this.Appearance.Options.UseFont = true;
@@ -346,6 +346,7 @@
             this.Controls.Add(this.splitContainerControl1);
             this.Name = "FormSalaryByEveryOne";
             this.Text = "个人工资明细表";
+            this.Load += new System.EventHandler(this.FormSalaryByEveryOne_Load);
             this.Controls.SetChildIndex(this.splitContainerControl1, 0);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
@@ -353,9 +354,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDateEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
             this.splitContainerControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

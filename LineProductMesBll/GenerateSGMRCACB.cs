@@ -7,6 +7,7 @@ using System . Linq;
 using System . Text;
 using System . Threading . Tasks;
 using StudentMgr;
+using DevExpress . XtraEditors;
 
 namespace LineProductMesBll
 {
@@ -34,9 +35,124 @@ namespace LineProductMesBll
         /// <param name="table"></param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public static Dictionary<object ,object> GenerateSGM ( Dictionary<object ,object> SQLString ,StringBuilder strSql ,string code ,string department)
+        public static Dictionary<object ,object> GenerateSGM ( Dictionary<object ,object> SQLString ,StringBuilder strSql ,string code ,string department )
         {
             DataTable table = SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
+
+            UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
+
+            if ( table == null || table . Rows . Count < 1 )
+                return null;
+            
+            SGMRCA header = new SGMRCA ( );
+            header . RCA001 = cateGory;
+            header . RCA002 = code;
+            header . RCA004 = UserInfoMation . sysTime . ToString ( "yyyyMMdd" );
+            header . RCA005 = "DS";
+            header . RCA006 = department;
+            header . RCA016 = "F";
+            header . RCA019 = "F";
+            add ( SQLString ,header );
+
+            SGMRCC bodyOne = new SGMRCC ( );
+            bodyOne . RCC001 = cateGory;
+            bodyOne . RCC002 = code;
+            bodyOne . RCC003 = source;
+            bodyOne . RCC007 = 0;
+            bodyOne . RCC008 = batchNum;
+            bodyOne . RCC011 = "000";
+
+            DataTable tableOne;
+
+            SGMRCB bodyTwo = new SGMRCB ( );
+            bodyTwo . RCB001 = cateGory;
+            bodyTwo . RCB002 = code;
+            bodyTwo . RCB019 = batchNum;
+            bodyTwo . RCB021 = source;
+            bodyTwo . RCB023 = "000";
+
+            int i = 0;
+
+            foreach ( DataRow row in table . Rows )
+            {
+                i++;
+                bodyOne . RCC004 = row [ "ANN002" ] . ToString ( );
+                bodyOne . RCC010 = row [ "ANN003" ] . ToString ( );
+                bodyOne . RCC005 = row [ "DDA001" ] . ToString ( );
+                bodyOne . RCC006 = string . IsNullOrEmpty ( row [ "ANN009" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANN009" ] );
+                bodyOne . RCC007 = string . IsNullOrEmpty ( row [ "RCC" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "RCC" ] );
+
+
+                if ( bodyOne . RCC006 > bodyOne . RCC007 )
+                {
+                    UserInfoMation . signForStoNumGreaterthanSurNum = "来源单号:" + bodyOne . RCC004 + "\n\r主件品号:" + bodyOne . RCC010 + "\n\r入库数量为:" + bodyOne . RCC006 + "\n\r剩余入库数量为:" + bodyOne . RCC007 + "\n\r入库数量多于剩余入库数量,请核实";
+                    SQLString . Clear ( );
+                    break;
+                }
+
+
+                bodyOne . RCC022 = i . ToString ( ) . PadLeft ( 3 ,'0' );
+                bodyOne . RCC028 = row [ "ANN005" ] . ToString ( );
+                addBodyOne ( SQLString ,bodyOne );
+
+                bodyTwo . RCB022 = bodyOne . RCC004;
+                bodyTwo . RCB024 = bodyOne . RCC010;
+                //bodyTwo . RCB008 = bodyOne . RCC006;
+                bodyTwo . RCB029 = bodyOne . RCC022;
+
+                strSql = new StringBuilder ( );
+                //001
+                //strSql . AppendFormat ( "SELECT QAB003,DEA002,DEA003,DEA057,DDA001,CONVERT(FLOAT,QAB005/QAB006) QAB FROM SGMQAB INNER JOIN TPADEA ON QAB003=DEA001 INNER JOIN TPADDA ON DEA008=DDA001 WHERE QAB001='{0}'" ,bodyTwo . RCB024 );
+                //002
+                //strSql . Append ( "WITH CET AS (" );
+                //strSql . AppendFormat ( "SELECT QAB003,DEA002,DEA003,DEA057,DDA001 FROM SGMQAB INNER JOIN TPADEA ON QAB003=DEA001 INNER JOIN TPADDA ON DEA008=DDA001 WHERE QAB001='{0}'),CFT AS ( " ,bodyTwo . RCB024 );
+                //strSql . AppendFormat ( "SELECT B.RAB003,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END RAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' GROUP BY RAA001,RAB003) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 WHERE A.RAA001='{0}') SELECT  QAB003,DEA002,DEA003,DEA057,DDA001,RAB QAB FROM CET A INNER JOIN CFT B ON A.QAB003=B.RAB003" ,bodyTwo . RCB022 );
+                //003
+
+                if ( UserInfoMation . signForOdd == false )
+                    strSql . AppendFormat ( "SELECT A.RAA001,B.RAB002,B.RAB003 QAB003,DEA002,DEA003,DEA057,DDA001,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END QAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB002,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' AND RAA015='{1}' GROUP BY RAA001,RAB003,RAB002) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 INNER JOIN TPADEA D ON B.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 WHERE A.RAA001='{0}'  AND RAA015='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
+                else
+                    strSql . AppendFormat ( "SELECT RAB001 RAA001,RAB002,RAB003 QAB003,RAB004 DEA002,RAB005 DEA003,DEA057,DDA001,CONVERT(FLOAT,QAB005/QAB006) QAB FROM SGMRAB A INNER JOIN TPADEA D ON A.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 INNER JOIN SGMQAB C ON A.RAB003=C.QAB003 WHERE  RAB001='{0}'  AND QAB001='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
+
+                tableOne = SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
+
+                if ( tableOne != null && tableOne . Rows . Count > 0 )
+                {
+                   int j = 0;
+                    foreach ( DataRow r in tableOne . Rows )
+                    {
+                        j++;
+                        bodyTwo . RCB003 = j . ToString ( ) . PadLeft ( 3 ,'0' );
+                        bodyTwo . RCB004 = r [ "QAB003" ] . ToString ( );
+                        bodyTwo . RCB005 = r [ "DEA002" ] . ToString ( );
+                        bodyTwo . RCB006 = r [ "DEA003" ] . ToString ( );
+                        bodyTwo . RCB007 = r [ "DDA001" ] . ToString ( );
+                        bodyTwo . RCB008 = bodyOne . RCC006 * ( string . IsNullOrEmpty ( r [ "QAB" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( r [ "QAB" ] ) );
+                        bodyTwo . RCB020 = r [ "DEA057" ] . ToString ( );
+                        bodyTwo . RCB026 = r [ "RAA001" ] . ToString ( );
+                        bodyTwo . RCB027 = r [ "RAB002" ] . ToString ( );
+                        if ( bodyTwo . RCB008 > 0 )
+                            addBodyTwo ( SQLString ,bodyTwo );
+                    }
+                }
+            }
+
+            return SQLString;
+        }
+
+        /// <summary>
+        /// 五金
+        /// </summary>
+        /// <param name="SQLString"></param>
+        /// <param name="strSql"></param>
+        /// <param name="code"></param>
+        /// <param name="department"></param>
+        /// <returns></returns>
+        public static Dictionary<object ,object> GenerateSGMS ( Dictionary<object ,object> SQLString ,StringBuilder strSql ,string code ,string department )
+        {
+            DataTable table = SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
+
+            UserInfoMation . signForStoNumGreaterthanSurNum = string . Empty;
 
             if ( table == null || table . Rows . Count < 1 )
                 return null;
@@ -74,9 +190,20 @@ namespace LineProductMesBll
             {
                 i++;
                 bodyOne . RCC004 = row [ "ANN002" ] . ToString ( );
+                bodyOne . RCC010 = row [ "ANN003" ] . ToString ( );
                 bodyOne . RCC005 = row [ "DDA001" ] . ToString ( );
                 bodyOne . RCC006 = string . IsNullOrEmpty ( row [ "ANN009" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANN009" ] );
-                bodyOne . RCC010 = row [ "ANN003" ] . ToString ( );
+                bodyOne . RCC007 = string . IsNullOrEmpty ( row [ "RCC" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "RCC" ] );
+
+
+                //if ( bodyOne . RCC006 > bodyOne . RCC007 )
+                //{
+                //    UserInfoMation . signForStoNumGreaterthanSurNum = "来源单号:" + bodyOne . RCC004 + "\n\r主件品号:" + bodyOne . RCC010 + "\n\r入库数量为:" + bodyOne . RCC006 + "\n\r剩余入库数量为:" + bodyOne . RCC007 + "\n\r入库数量多于剩余入库数量,请核实";
+                //    SQLString . Clear ( );
+                //    break;
+                //}
+
+
                 bodyOne . RCC022 = i . ToString ( ) . PadLeft ( 3 ,'0' );
                 bodyOne . RCC028 = row [ "ANN005" ] . ToString ( );
                 addBodyOne ( SQLString ,bodyOne );
@@ -94,13 +221,17 @@ namespace LineProductMesBll
                 //strSql . AppendFormat ( "SELECT QAB003,DEA002,DEA003,DEA057,DDA001 FROM SGMQAB INNER JOIN TPADEA ON QAB003=DEA001 INNER JOIN TPADDA ON DEA008=DDA001 WHERE QAB001='{0}'),CFT AS ( " ,bodyTwo . RCB024 );
                 //strSql . AppendFormat ( "SELECT B.RAB003,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END RAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' GROUP BY RAA001,RAB003) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 WHERE A.RAA001='{0}') SELECT  QAB003,DEA002,DEA003,DEA057,DDA001,RAB QAB FROM CET A INNER JOIN CFT B ON A.QAB003=B.RAB003" ,bodyTwo . RCB022 );
                 //003
-                strSql . AppendFormat ( "SELECT A.RAA001,B.RAB002,B.RAB003 QAB003,DEA002,DEA003,DEA057,DDA001,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END QAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB002,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' AND RAA015='{1}' GROUP BY RAA001,RAB003,RAB002) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 INNER JOIN TPADEA D ON B.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 WHERE A.RAA001='{0}'  AND RAA015='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
+
+                if ( UserInfoMation . signForOdd == false )
+                    strSql . AppendFormat ( "SELECT A.RAA001,B.RAB002,B.RAB003 QAB003,DEA002,DEA003,DEA057,DDA001,CASE WHEN RAB=0 THEN 0 ELSE (RAB008-RAB009)/RAB END QAB FROM SGMRAA A INNER JOIN (SELECT RAA001,RAB002,RAB003,MAX(CASE WHEN RAB007=0 THEN 0 WHEN RAA018=0 THEN 0 ELSE CONVERT(FLOAT,(RAB008-RAB009)/(RAB007/RAA018)) END) RAB FROM SGMRAA A INNER JOIN SGMRAB B ON A.RAA001=B.RAB001 WHERE RAA001='{0}' AND RAA015='{1}' GROUP BY RAA001,RAB003,RAB002) B ON A.RAA001=B.RAA001 INNER JOIN SGMRAB C ON B.RAA001=C.RAB001 AND B.RAB003=C.RAB003 INNER JOIN TPADEA D ON B.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 WHERE A.RAA001='{0}'  AND RAA015='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
+                else
+                    strSql . AppendFormat ( "SELECT RAB001 RAA001,RAB002,RAB003 QAB003,RAB004 DEA002,RAB005 DEA003,DEA057,DDA001,CONVERT(FLOAT,QAB005/QAB006) QAB FROM SGMRAB A INNER JOIN TPADEA D ON A.RAB003=D.DEA001 INNER JOIN TPADDA F ON DEA008=DDA001 INNER JOIN SGMQAB C ON A.RAB003=C.QAB003 WHERE  RAB001='{0}'  AND QAB001='{1}'" ,bodyTwo . RCB022 ,bodyTwo . RCB024 );
 
                 tableOne = SqlHelper . ExecuteDataTable ( strSql . ToString ( ) );
 
                 if ( tableOne != null && tableOne . Rows . Count > 0 )
                 {
-                   int j = 0;
+                    int j = 0;
                     foreach ( DataRow r in tableOne . Rows )
                     {
                         j++;

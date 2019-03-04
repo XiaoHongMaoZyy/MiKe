@@ -32,6 +32,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.roundButton1 = new UIControl.Main.RoundButton();
             this.button1 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelControl1
@@ -98,15 +99,35 @@
             this.button1.Text = "个人工资明细表";
             this.button1.UseVisualStyleBackColor = false;
             // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.Transparent;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.Location = new System.Drawing.Point(240, 354);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(120, 89);
+            this.button3.TabIndex = 18;
+            this.button3.Tag = "FormWages";
+            this.button3.Text = "入库明细对比表";
+            this.button3.UseVisualStyleBackColor = false;
+            // 
             // ReportControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.roundButton1);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.button2);
             this.Name = "ReportControl";
+            this.Size = new System.Drawing.Size(632, 483);
             this.SizeChanged += new System.EventHandler(this.ReportControl_SizeChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -119,5 +140,6 @@
         public System . Windows . Forms . Button button2;
         public RoundButton roundButton1;
         public System . Windows . Forms . Button button1;
+        public System . Windows . Forms . Button button3;
     }
 }
