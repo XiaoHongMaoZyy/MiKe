@@ -51,6 +51,7 @@
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             this.yearOrMonth = new DevExpress.XtraEditors.ComboBoxEdit();
             this.dtTime = new DevExpress.XtraEditors.DateEdit();
+            this.repositoryItemHyperLinkEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemHyperLinkEdit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDateEdit1)).BeginInit();
@@ -60,6 +61,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolExport
@@ -82,8 +84,9 @@
             this.gridControl1.MenuManager = this.barManager1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemDateEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1145, 322);
+            this.repositoryItemDateEdit1,
+            this.repositoryItemHyperLinkEdit1});
+            this.gridControl1.Size = new System.Drawing.Size(1145, 331);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -297,14 +300,14 @@
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.Horizontal = false;
-            this.splitContainerControl1.Location = new System.Drawing.Point(0, 26);
+            this.splitContainerControl1.Location = new System.Drawing.Point(0, 24);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.yearOrMonth);
             this.splitContainerControl1.Panel1.Controls.Add(this.dtTime);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.gridControl1);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1145, 372);
+            this.splitContainerControl1.Size = new System.Drawing.Size(1145, 374);
             this.splitContainerControl1.SplitterPosition = 38;
             this.splitContainerControl1.TabIndex = 5;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -337,6 +340,11 @@
             this.dtTime.Size = new System.Drawing.Size(149, 20);
             this.dtTime.TabIndex = 1;
             // 
+            // repositoryItemHyperLinkEdit1
+            // 
+            this.repositoryItemHyperLinkEdit1.AutoHeight = false;
+            this.repositoryItemHyperLinkEdit1.Name = "repositoryItemHyperLinkEdit1";
+            // 
             // FormSalaryByEveryOne
             // 
             this.Appearance.Options.UseFont = true;
@@ -357,6 +365,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.yearOrMonth.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTime.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemHyperLinkEdit1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,5 +395,6 @@
         private DevExpress . XtraGrid . Columns . GridColumn ANX;
         private DevExpress . XtraGrid . Columns . GridColumn ANW020;
         private DevExpress . XtraEditors . ComboBoxEdit yearOrMonth;
+        private DevExpress . XtraEditors . Repository . RepositoryItemHyperLinkEdit repositoryItemHyperLinkEdit1;
     }
 }

@@ -90,7 +90,7 @@ namespace LineProductMesBll
                     break;
                 }
 
-
+                bodyOne . RCC007 = null;
                 bodyOne . RCC022 = i . ToString ( ) . PadLeft ( 3 ,'0' );
                 bodyOne . RCC028 = row [ "ANN005" ] . ToString ( );
                 addBodyOne ( SQLString ,bodyOne );
@@ -193,7 +193,7 @@ namespace LineProductMesBll
                 bodyOne . RCC010 = row [ "ANN003" ] . ToString ( );
                 bodyOne . RCC005 = row [ "DDA001" ] . ToString ( );
                 bodyOne . RCC006 = string . IsNullOrEmpty ( row [ "ANN009" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "ANN009" ] );
-                bodyOne . RCC007 = string . IsNullOrEmpty ( row [ "RCC" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "RCC" ] );
+                //bodyOne . RCC007 = string . IsNullOrEmpty ( row [ "RCC" ] . ToString ( ) ) == true ? 0 : Convert . ToDecimal ( row [ "RCC" ] );
 
 
                 //if ( bodyOne . RCC006 > bodyOne . RCC007 )
